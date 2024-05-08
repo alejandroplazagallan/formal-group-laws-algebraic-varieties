@@ -1,0 +1,19 @@
+\vspace{3mm}
+
+To get familiar with formal group laws, let's prove by induction step by step that $[n]$ is a homomorphism of formal group laws. For that, we need to prove that $[n](F(x,y))=F([n](x),[n](x))$.
+
+For $n=1$, it is trivial. Assume it holds for some fixed $n\geq1$, and we'll prove it holds for $n+1$.
+
+By induction hypothesis,
+\[[n+1](F(x,y))=F([n](F(x,y)),F(x,y))=F\big(F([n](x),[n](y)),F(x,y)\big).\]
+By associativity of $F$,
+\[F\big(F([n](x),[n](y)),F(x,y)\big)=F\big(F\big(F([n](x),[n](y)),x\big),y\big).\]
+By commutativity of $F$,
+\[F\big(F\big(F([n](x),[n](y)),x\big),y\big)=F\big(F\big(x,F([n](x),[n](y))\big),y\big).\]
+By associativity of $F$,
+\[F\big(F\big(x,F([n](x),[n](y))\big),y\big)=F\big(F\big(F(x,[n](x)),[n](y)\big),y\big).\]
+By commutativity of $F$,
+\[F\big(F\big(F(x,[n](x)),[n](y)\big),y\big)=F\big(F\big(F([n](x),x)),[n](y)\big),y\big)=F\big(F([n+1](x),[n](y),y\big).\]
+By associativity of $F$,
+\[F\big(F([n+1](x),[n](y),y\big)=F\big([n+1](x),F([n](y),y)\big)=F([n+1](x),F([n+1](y)).\]
+\hfill\qedsymbol

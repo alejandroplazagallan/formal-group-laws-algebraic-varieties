@@ -1,0 +1,16 @@
+
+Every open subset $U\subseteq X$ that contains $x$ is an \'{e}tale neighbourhood of $\bar{x}$ via the inclusion $U\hookrightarrow X$ and the geometric point $\bar{u}$ that factorises $\bar{x}$:
+\[
+\begin{tikzcd}[column sep=small]
+\Spec k\arrow[rr,"\bar{x}"]\arrow[rd,swap,"\bar{u}"]&&X.\\
+&U\arrow[ru,hook]
+\end{tikzcd}
+\]
+Hence, there are morphisms $H^0(U,\mathcal{O}_U)\rightarrow\mathcal{O}_{X,\bar{x}}$ (compatible with restrictions) for all open sets $U\subseteq X$. By the universal property of the direct limit, there exists a unique ring homomorphism $\mathcal{O}_{X,x}\rightarrow\mathcal{O}_{X,\bar{x}}$ such that the following diagram commutes:
+\[
+\begin{tikzcd}[column sep=small,row sep=small]
+&\mathcal{O}_{X,\bar{x}}\\\\
+&\mathcal{O}_{X,x}\arrow[uu,dashed]\\
+H^0(U,\mathcal{O}_U)\arrow[rr]\arrow[ru]\arrow[ruuu,bend left]&&H^0(V,\mathcal{O}_V).\arrow[lu]\arrow[luuu,bend right]
+\end{tikzcd}
+\]

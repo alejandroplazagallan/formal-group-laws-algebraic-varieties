@@ -1,0 +1,53 @@
+\begin{tikzpicture}[scale=1.5]
+\newcommand{\avar}{-1}
+\newcommand{\bvar}{0.7}
+\newcommand{\xmax}{1.5}
+\newcommand{\excx}{0.00017547}
+\newcommand{\xp}{-1}
+\newcommand{\xq}{-0.2}
+\newcommand{\xptan}{-0.5}
+\newcommand{\sep}{1}
+\newcommand{\exc}{1}
+
+\newcommand{\xmin}{-(-sqrt(27*(\bvar)^2+4*(\avar)^3)/(2*3^(3/2))+\bvar/2)^(1/3)+\avar/(3*(-sqrt(27*(\bvar)^2+4*(\avar)^3)/(2*3^(3/2))+\bvar/2)^(1/3))-\excx}
+\newcommand{\yp}{sqrt((\xp)^3+\avar*\xp+\bvar)}
+\newcommand{\yq}{sqrt((\xq)^3+\avar*\xq+\bvar)}
+\newcommand{\slope}{(\yq-\yp)/(\xq-\xp)}
+\newcommand{\xr}{(\slope)^2-\xp-\xq}
+\newcommand{\yr}{\slope*(\xr-\xp)+\yp}
+\newcommand{\sepl}{-\sep/2-\xmax-\exc}
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot({\x+\sepl},{sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot({\x+\sepl},{-sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [fill] ({\xp+\sepl},{\yp}) circle (1.5pt);
+\draw [above left] ({\xp+\sepl},{\yp}) node {$P$};
+\draw [fill] ({\xq+\sepl},{\yq}) circle (1.5pt);
+\draw [above right] ({\xq+\sepl},{\yq}) node {$Q$};
+\draw ({\xmin-\exc+\sepl},{\slope*(\xmin-\exc-\xp)+\yp}) -- ({\xmax+\exc+\sepl},{\slope*(\xmax+\exc-\xp)+\yp});
+\draw [fill] ({\xr+\sepl},{\yr}) circle (1.5pt);
+\draw [above left] ({\xr+\sepl},{\yr}) node {$R$};
+\draw [->,dash pattern=on 4pt off 4pt] ({\xr+\sepl},{-(\yr)-\exc}) -- ({\xr+\sepl},{\yr+\exc});
+\draw [above right] ({\xr+\sepl},{\yr+\exc}) node {$O$};
+\draw [fill] ({\xr+\sepl},{-(\yr)}) circle (1.5pt);
+\draw [below left] ({\xr+\sepl},{-(\yr)}) node {$P\oplus Q$};
+\newcommand{\yptan}{sqrt((\xptan)^3+\avar*\xptan+\bvar)}
+\newcommand{\slopetan}{(3*(\xptan)^2+\avar)/(2*\yptan)}
+\newcommand{\xrtan}{(\slopetan)^2-2*\xptan}
+\newcommand{\yrtan}{\slopetan*(\xrtan-\xptan)+\yptan}
+\newcommand{\sepr}{\sep/2-(\xmin)+\exc}
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot({\x+\sepr},{sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot({\x+\sepr},{-sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [fill] ({\xptan+\sepr},{\yptan}) circle (1.5pt);
+\draw [above left] ({\xptan+\sepr},{\yptan}) node {$P$};
+\draw ({\xmin-\exc+\sepr},{\slopetan*(\xmin-\exc-\xptan)+\yptan}) -- ({\xmax+\exc+\sepr},{\slopetan*(\xmax+\exc-\xptan)+\yptan});
+\draw [fill] ({\xrtan+\sepr},{\yrtan}) circle (1.5pt);
+\draw [above left] ({\xrtan+\sepr},{\yrtan}) node {$R$};
+\draw [->,dash pattern=on 4pt off 4pt] ({\xrtan+\sepr},{-(\yrtan)-\exc}) -- ({\xrtan+\sepr},{\yrtan+\exc});
+\draw [above right] ({\xrtan+\sepr},{\yrtan+\exc}) node {$O$};
+\draw [fill] ({\xrtan+\sepr},{-(\yrtan)}) circle (1.5pt);
+\draw [below left] ({\xrtan+\sepr},{-(\yrtan)}) node {$P\oplus P$};
+\draw [fill] ({\xmin+\sepr},0) circle (1.5pt);
+\draw [left] ({\xmin+\sepr},0) node {$T$};
+\draw [->,dash pattern=on 4pt off 4pt] ({\xmin+\sepr},{-(\yrtan)-\exc}) -- ({\xmin+\sepr},{\yrtan+\exc});
+\draw [above right] ({\xmin+\sepr},{\yrtan+\exc}) node {$O$};
+\draw [below right] ({\xmin+\sepr},{-(\yrtan)-\exc/2}) node {$T\oplus T=O$};
+\end{tikzpicture}

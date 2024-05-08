@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+\newcommand{\ymax}{1.5}
+\newcommand{\xhead}{1.5}
+\newcommand{\xii}{0.4}
+\newcommand{\exc}{0.5}
+\newcommand{\xsep}{6}
+\newcommand{\ysep}{7}
+\newcommand{\textsep}{0.5}
+
+\newcommand{\xmax}{(sqrt(((\ymax+\exc)/\xhead)^2*(27*((\ymax+\exc)/\xhead)^2-4))/(2*3^(3/2))+((\ymax+\exc)/\xhead)^2/2+(-1)/27)^(1/3)+1/(9*(sqrt(((\ymax+\exc)/\xhead)^2*(27*((\ymax+\exc)/\xhead)^2-4))/(2*3^(3/2))+((\ymax+\exc)/\xhead)^2/2+(-1)/27)^(1/3))+(-1)/3}
+\draw [above] ({\xhead*(\xmax-1)/2-\xsep/2},\ymax+\exc+\ysep/2+\textsep) node {Type $\I_1$};
+\draw [smooth,samples=75,domain=-1:0] plot(\xhead*\x-\xsep/2,{\xhead*sqrt((\x)^(2)+(\x)^(3))+\ysep/2});
+\draw [smooth,domain=0:{\xmax}] plot(\xhead*\x-\xsep/2,{\xhead*sqrt((\x)^(2)+(\x)^(3))+\ysep/2});
+\draw [smooth,samples=75,domain=-1:0] plot(\xhead*\x-\xsep/2,{-\xhead*sqrt((\x)^(2)+(\x)^(3))+\ysep/2});
+\draw [smooth,domain=0:{\xmax}] plot(\xhead*\x-\xsep/2,{-\xhead*sqrt((\x)^(2)+(\x)^(3))+\ysep/2});
+\draw [above] (\xsep/2,\ymax+\exc+\ysep/2+\textsep) node {Type $\I_2$};
+\draw ({(\ymax)^2/(2*\xii)-\xii/2-sqrt(((\ymax)^2/(2*\xii)+\xii/2)^2-(\ymax+\exc)^2)+\xsep/2},\ymax+\exc+\ysep/2) arc ({180-asin((\ymax+\exc)/((\ymax)^2/(2*\xii)+\xii/2))}:{180+asin((\ymax+\exc)/((\ymax)^2/(2*\xii)+\xii/2))}:{(\ymax)^2/(2*\xii)+\xii/2});
+\draw ({-((\ymax)^2/(2*\xii)-\xii/2-sqrt(((\ymax)^2/(2*\xii)+\xii/2)^2-(\ymax+\exc)^2))+\xsep/2},\ymax+\exc+\ysep/2) arc ({asin((\ymax+\exc)/((\ymax)^2/(2*\xii)+\xii/2))}:{-asin((\ymax+\exc)/((\ymax)^2/(2*\xii)+\xii/2))}:{(\ymax)^2/(2*\xii)+\xii/2});
+\draw [above] (-\xsep/2,\ymax+\exc-\ysep/2+\textsep) node {Type $\I_3$};
+\draw ({-2*sqrt(3)/3*\ymax-sqrt(3)/3*\exc-\xsep/2},{-\ymax-\exc-\ysep/2}) -- ({sqrt(3)/3*\exc-\xsep/2},{\ymax+\exc-\ysep/2});
+\draw ({-sqrt(3)/3*\exc-\xsep/2},{\ymax+\exc-\ysep/2}) -- ({2*sqrt(3)/3*\ymax+sqrt(3)/3*\exc-\xsep/2},{-\ymax-\exc-\ysep/2});
+\draw ({2*sqrt(3)/3*\ymax+2*sqrt(3)/3*\exc-\xsep/2},{-\ymax-\ysep/2}) -- ({-2*sqrt(3)/3*\ymax-2*sqrt(3)/3*\exc-\xsep/2},{-\ymax-\ysep/2});
+\draw [above] (\xsep/2,\ymax+\exc-\ysep/2+\textsep) node {Type $\I_n$};
+\draw ({-sqrt(3)/3*\ymax+sqrt(3)/3*\exc+\xsep/2},{-\ymax-\exc-\ysep/2}) -- ({-2*sqrt(3)/3*\ymax-sqrt(3)/3*\exc+\xsep/2},\exc-\ysep/2);
+\draw ({-2*sqrt(3)/3*\ymax-sqrt(3)/3*\exc+\xsep/2},-\exc-\ysep/2) -- ({-sqrt(3)/3*\ymax+sqrt(3)/3*\exc+\xsep/2},{\ymax+\exc-\ysep/2});
+\draw ({sqrt(3)/3*\ymax-sqrt(3)/3*\exc+\xsep/2},{\ymax+\exc-\ysep/2}) -- ({2*sqrt(3)/3*\ymax+sqrt(3)/3*\exc+\xsep/2},-\exc-\ysep/2);
+\draw ({2*sqrt(3)/3*\ymax+sqrt(3)/3*\exc+\xsep/2},\exc-\ysep/2) -- ({sqrt(3)/3*\ymax-sqrt(3)/3*\exc+\xsep/2},{-\ymax-\exc-\ysep/2});
+\draw (\xsep/2,\ymax-\ysep/2) node {$\cdots$};
+\draw (\xsep/2,-\ymax-\ysep/2) node {$\cdots$};
+\end{tikzpicture}
