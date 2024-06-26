@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\newcommand{\ymax}{1.5}
+\newcommand{\exc}{0.5}
+
+\draw ({-sqrt(3)/3*\ymax+sqrt(3)/3*\exc},{-\ymax-\exc}) -- ({-2*sqrt(3)/3*\ymax-sqrt(3)/3*\exc},\exc);
+\draw ({-2*sqrt(3)/3*\ymax-sqrt(3)/3*\exc},-\exc) -- ({-sqrt(3)/3*\ymax+sqrt(3)/3*\exc},{\ymax+\exc});
+\draw ({sqrt(3)/3*\ymax-sqrt(3)/3*\exc},{\ymax+\exc}) -- ({2*sqrt(3)/3*\ymax+sqrt(3)/3*\exc},-\exc);
+\draw ({2*sqrt(3)/3*\ymax+sqrt(3)/3*\exc},\exc) -- ({sqrt(3)/3*\ymax-sqrt(3)/3*\exc},{-\ymax-\exc});
+\draw (0,\ymax) node {$\cdots$};
+\draw (0,-\ymax) node {$\cdots$};
+\end{tikzpicture}

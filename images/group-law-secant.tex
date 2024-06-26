@@ -1,0 +1,31 @@
+\begin{tikzpicture}[scale=1.5]
+\newcommand{\avar}{-1}
+\newcommand{\bvar}{0.7}
+\newcommand{\xmax}{1.5}
+\newcommand{\excx}{0.00017547}
+\newcommand{\xp}{-1}
+\newcommand{\xq}{-0.2}
+\newcommand{\exc}{1}
+\newcommand{\excy}{0.6}
+
+\newcommand{\xmin}{-(-sqrt(27*(\bvar)^2+4*(\avar)^3)/(2*3^(3/2))+\bvar/2)^(1/3)+\avar/(3*(-sqrt(27*(\bvar)^2+4*(\avar)^3)/(2*3^(3/2))+\bvar/2)^(1/3))-\excx}
+\newcommand{\ymax}{sqrt((\xmax)^3+\avar*\xmax+\bvar)}
+\newcommand{\yp}{sqrt((\xp)^3+\avar*\xp+\bvar)}
+\newcommand{\yq}{sqrt((\xq)^3+\avar*\xq+\bvar)}
+\newcommand{\slope}{(\yq-\yp)/(\xq-\xp)}
+\newcommand{\xr}{(\slope)^2-\xp-\xq}
+\newcommand{\yr}{\slope*(\xr-\xp)+\yp}
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot(\x,{sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [smooth,samples=100,domain={\xmin}:\xmax] plot(\x,{-sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [fill] (\xp,{\yp}) circle (1.5pt);
+\draw [above left] (\xp,{\yp}) node {$P$};
+\draw [fill] (\xq,{\yq}) circle (1.5pt);
+\draw [above right] (\xq,{\yq}) node {$Q$};
+\draw ({\xmin-\exc},{\slope*(\xmin-\exc-\xp)+\yp}) -- (\xmax+\exc,{\slope*(\xmax+\exc-\xp)+\yp});
+\draw [fill] ({\xr},{\yr}) circle (1.5pt);
+\draw [above left] ({\xr},{\yr}) node {$R$};
+\draw [->,dash pattern=on 4pt off 4pt] ({\xr},{-\ymax-\excy}) -- ({\xr},{\ymax+\excy});
+\draw [above right] ({\xr},{\ymax+\excy}) node {$O$};
+\draw [fill] ({\xr},{-(\yr)}) circle (1.5pt);
+\draw [below left] ({\xr},{-(\yr)}) node {$P\oplus Q$};
+\end{tikzpicture}

@@ -1,3 +1,5 @@
+%If on Overleaf, first compile file "externalize-tikz.tex" in folder "images". Then compile "report.tex"
+%This saves the images as pdf in the cache and it optimises the compilation time
 \documentclass{report}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -9,15 +11,23 @@
 \usepackage{enumitem}
 \usepackage{amsthm}
 \usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{tikz-cd}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
 \usepackage{stmaryrd}
-\usepackage{tocbibind}
+\SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
+\usepackage[backend=biber,style=alphabetic]{biblatex}
+\addbibresource{bibliography.bib}
+\usepackage{csquotes}
 \usepackage[left=2cm,top=2.5cm,right=1.5cm,bottom=2.5cm]{geometry}
 \setlength{\parindent}{0pt}
 \renewcommand{\baselinestretch}{1.1}
 
 \DeclareMathOperator{\Spf}{Spf}
 \DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Proj}{Proj}
 \DeclareMathOperator{\Mod}{Mod}
 \DeclareMathOperator{\Top}{Top}
 \DeclareMathOperator{\id}{id}
@@ -34,17 +44,24 @@
 \DeclareMathOperator{\Pic}{Pic}
 \DeclareMathOperator{\Br}{Br}
 \DeclareMathOperator{\I}{I}
+\DeclareMathOperator{\II}{II}
+\DeclareMathOperator{\III}{III}
+\DeclareMathOperator{\IV}{IV}
 \DeclareMathOperator{\Sch}{Sch}
+\DeclareMathOperator{\Div}{Div}
+\DeclareMathOperator{\NS}{NS}
+\DeclareMathOperator{\Num}{Num}
 
 %\renewcommand{\thechapter}{\Roman{chapter}}
 
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{theorem}[equation]{Theorem}
+\newtheorem{corollary}[equation]{Corollary}
+\newtheorem{proposition}[equation]{Proposition}
+\newtheorem{lemma}[equation]{Lemma}
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{remark}[equation]{Remark}
+\newtheorem{example}[equation]{Example}
 
 \title{Formal group laws arising from algebraic varieties}
 \author{Alejandro Plaza Gall\'{a}n\\\\Advisor:\\Christian Liedtke}
@@ -58,11 +75,11 @@
 
 \chapter{Elliptic surfaces}
 
-In this work, we want to study the formal Brauer group over elliptic surfaces. Restricting us to these particular varieties will let us relate some properties of the formal Brauer group with coefficients that define the elliptic surfaces. We will treat the algebraic varieties as schemes, this is, locally ringed spaces that are locally the spectrum of a ring. For more information about algebraic varieties and schemes, see \cite{hartshorne2013algebraic}.
+In this work, we want to study the formal Brauer group over elliptic surfaces. Restricting us to these particular varieties will let us relate some properties of the formal Brauer group with coefficients that define the elliptic surfaces. We will treat the algebraic varieties as schemes, this is, locally ringed spaces that are locally the spectrum of a ring. For more information about algebraic varieties and schemes, see \cite{hartshorne1977algebraic}.
 
 \section{Elliptic curves}
 
-Hartshorne \cite[Section~IV.4]{hartshorne2013algebraic} gives the theory of elliptic curves over an algebraically closed field. Let's start from the beginning, by defining what we mean with elliptic curve.
+Hartshorne \cite[Section~IV.4]{hartshorne1977algebraic} gives the theory of elliptic curves over an algebraically closed field. Let's start from the beginning, by defining what we mean with elliptic curve.
 
 \begin{definition}
 A curve $X$ is an integral smooth projective and separated scheme of dimension $1$ of finite type over a field $k$.
@@ -86,13 +103,13 @@ Given an elliptic curve $X$ over an algebraically closed field $k$ with $\chara 
 In the conditions of previous lemma, we define the \textbf{$\boldsymbol{j}$-invariant} of $X$ as
 \[j(X)=2^8\frac{(\lambda^2-\lambda+1)^3}{\lambda^2(\lambda-1)^2}.\]
 
-%\cite[Lemma~IV.4.5]{hartshorne2013algebraic}
+%\cite[Lemma~IV.4.5]{hartshorne1977algebraic}
 This $\lambda$ is not unique. Given such a $\lambda$, the other possible values are exactly
 \[\lambda,\frac{1}{\lambda},1-\lambda,\frac{1}{1-\lambda},\frac{\lambda}{\lambda-1},\frac{\lambda-1}{\lambda}.\]
 \end{definition}
 
 \begin{theorem}
-%\cite[Theorem~IV.4.1]{hartshorne2013algebraic}
+%\cite[Theorem~IV.4.1]{hartshorne1977algebraic}
 Let $X,Y$ be elliptic curves over an algebraically closed field $k$ with $\chara k\neq2$. Then:
 \begin{enumerate}
 \item the $j$-invariant of $X$ does not depend on the morphism $X\rightarrow\mathbb{P}_k^1$;
@@ -106,7 +123,7 @@ Thus there exists a bijective correspondence between the elements of $k$ and the
 Hence, the $j$-invariant is a parameter that fully characterises an elliptic curve up to isomorphism. This way, the set of isomorphism classes of elliptic curves over $k$ can be endowed with the structure of moduli variety of $\mathbb{A}_k^1$.
 
 \begin{proposition}
-%\cite[Proposition~IV.6]{hartshorne2013algebraic}
+%\cite[Proposition~IV.6]{hartshorne1977algebraic}
 Let $(X,P_0)$ be an elliptic curve over an algebraically closed field $k$ with $\chara k\neq2$. Then, there exists a closed immersion $X\hookrightarrow\mathbb{P}_k^2$ such that the image is the plain curve given by the equation
 \begin{equation}
 \label{Equ:legendre}
@@ -124,7 +141,7 @@ The Equation \eqref{Equ:legendre} is said to be in \textbf{Legendre form}.
 
 \begin{lemma}
 \label{Lem:existscollinear}
-%\cite[Section~IV.4.The~Group~Structure]{hartshorne2013algebraic}
+%\cite[Section~IV.4.The Group Structure]{hartshorne1977algebraic}
 Let $(X,P_0)$ be an elliptic curve over an algebraically closed field $k$. For all closed points $P,Q\in X$, there exists a unique closed point $R\in X$ such that $P+Q\sim R+P_0$, i.e., such that $P+Q$ is a divisor linearly equivalent to $R+P_0$.
 \end{lemma}
 
@@ -133,17 +150,26 @@ In the case of the previous lemma, we denote $P\oplus Q\coloneqq R$.
 \end{definition}
 
 \begin{proposition}
-%\cite[Proposition~IV.4.8]{hartshorne2013algebraic}
+%\cite[Proposition~IV.4.8]{hartshorne1977algebraic}
 Let $(X,P_0)$ be an elliptic curve over an algebraically closed field $k$. Then the closed points of $X$ form a group according to the previously defined operation $\oplus$ with neutral element $P_0$, which is also denoted $O$. Furthermore, the inverse map $\rho:X\rightarrow X$, the operation map $\oplus:X\times X\rightarrow X$ and the neutral element map $\sigma_0:\Spec k\rightarrow X$ are morphisms of schemes over $k$. Thus, this defines a group scheme structure on the elliptic curve $(X,P_0)$.
 \end{proposition}
 
-%\cite[Composition~Law~III.2.1]{silverman2009arithmetic}
+%\cite[Composition Law~III.2.1]{silverman1986arithmetic}
 Let's find out the geometrical interpretation of the group law. An illustration of this process can be found in Figure \ref{fig:group-law}. Consider $X$ as a cubic curve in $\mathbb{P}_k^2$ via $|3P_0|$. Observe that $P\oplus Q\oplus R=O$ means $P+Q+R\sim3P_0$ as divisors, which is equivalent to $P,Q,R$ being collinear. Now, by Lemma \ref{Lem:existscollinear}, given $P,Q\in X$, the line through both $P$ and $Q$ (or the tangent line at $P$ in case $P=Q$) intersects the curve at exactly $P$, $Q$, and at a third point $R$. This is, $P\oplus Q\oplus R=O$, so $P\oplus Q=\ominus R$. Then, we just need to find the inverse of $R$. For that, take the line that goes through $O$ and $R$, which intersects the curve at the point $R'$. Then, $O,R,R'$ are collinear, i.e., $O\oplus R\oplus R'=O$, so we get $P\oplus Q=\ominus R=R'$.
 
 \begin{figure}[!ht]
 \begin{center}
-\input{../images/group-law.tex}
-\caption{Illustration of the group law of elliptic curves on the real plane curve $y^2=x^3-x+0.7$. The left curve shows the sum of two distinct points, while the right one presents the sum of a point with itself. Modified from: \cite[Figure~3.3]{silverman2009arithmetic}.}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/group-law-secant.pdf}{\includegraphics{../images/group-law-secant.pdf}}{\input{../images/group-law-secant.tex}}
+\caption{Sum of two distinct points.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/group-law-tangent.pdf}{\includegraphics{../images/group-law-tangent.pdf}}{\input{../images/group-law-tangent.tex}}
+\caption{Sum of a point with itself.}
+\end{subfigure}
+\caption{Illustration of the group law of elliptic curves. Modified from: \cite[Figure~3.3]{silverman1986arithmetic}.}
 \label{fig:group-law}
 \end{center}
 \end{figure}
@@ -151,10 +177,11 @@ Let's find out the geometrical interpretation of the group law. An illustration 
 Notice that the group structure of $X$ depends on the choice of the neutral element $P_0$, since it is the point that acts as neutral element. That's why an elliptic curve is defined as a curve $X$ together with a point $P_0$. However, sometimes, when there is no possible confusion, $P_0$ is implicitly implied, and one simply talks about the elliptic curve $X$.
 \vspace{2mm}
 
-Silverman \cite[Chapter~III]{silverman2009arithmetic} also presents a theory of elliptic curves. He studies them as polynomial equations on the projective plane rather than as schemes. This approach has the advantage of allowing to do explicit calculations. Let's present the main results of this point of view.
+Silverman \cite[Chapter~III]{silverman1986arithmetic} also presents a theory of elliptic curves. He studies them as polynomial equations on the projective plane rather than as schemes. This approach has the advantage of allowing to do explicit calculations. Let's present the main results of this point of view.
 
 \begin{proposition}
-%\cite[Proposition~III.3.1]{silverman2009arithmetic}
+\label{pro:weierstrass-equation}
+%\cite[Proposition~III.3.1]{silverman1986arithmetic}
 Let $(X,P_0)$ be an elliptic curve over a non-necessarily algebraically closed field $k$. Then there exists a closed immersion $X\hookrightarrow\mathbb{P}_k^2$ whose image is written as the locus that satisfies
 \begin{equation}
 \label{Equ:weierstrass}
@@ -172,10 +199,10 @@ b_6&=a_3^2+4a_6.
 \end{align*}
 Define as well the following quantities:
 \begin{align*}
-b_8&=a_1^2a_6+4a_2a_6-a_1a_3a_4+a_2a_3^2-a_4^1,\\
-c_4&=b_2^2-24b_3,\\
+b_8&=a_1^2a_6+4a_2a_6-a_1a_3a_4+a_2a_3^2-a_4^2,\\
+c_4&=b_2^2-24b_4,\\
 c_6&=-b_2^3+36b_2b_4-216b_6,\\
-\Delta&=-b_2^2b_6-6b_4^3-26b_6^2+9b_2b_4b_6,\\
+\Delta&=-b_2^2b_8-8b_4^3-27b_6^2+9b_2b_4b_6,\\
 j&=\frac{c_4^3}{\Delta},
 \end{align*}
 which satisfy
@@ -193,7 +220,7 @@ y^2z=x^3-27c_4xz^2-54c_6z^3.
 \end{proposition}
 
 \begin{definition}
-%\cite[Proposition~III.3.1]{silverman2009arithmetic}
+%\cite[Proposition~III.3.1]{silverman1986arithmetic}
 Equation \eqref{Equ:weierstrass} is called the \textbf{Weierstrass equation} of the curve $X$. (Note that, although every elliptic curve is given by a Weierstrass equation, this might not be unique.)
 
 The quantity $\Delta$ is called the \textbf{discriminant} of the Weierstrass equation.
@@ -206,12 +233,12 @@ y^2+a_1xy+a_3y=x^3+a_2x^2+a_4x+a_6,
 \end{equation}
 plus the point at infinity $O=[0:1:0]$, that acts as the neutral element for the sum of points in the elliptic curve.
 
-The group law of the elliptic curve given by a Weierstrass equation can be written as explicit formulae in the coordinates of the points. This way, given two points with inhomogeneous coordinates $(x_1,y_1)$, $(x_2,y_2)$, with sum $(x_3,y_3)=(x_1,y_1)\oplus(x_2,y_2)$, the coordinates $x_3$ and $y_3$ can be written as rational functions in the variables $x_1,y_1,x_2,y_2$. For these explicit formulae, see \cite[Group Law Algorithm~III.2.3]{silverman2009arithmetic}.
-%write formulae?
+The group law of the elliptic curve given by a Weierstrass equation can be written as explicit formulae in the coordinates of the points. This way, given two points with inhomogeneous coordinates $(x_1,y_1)$, $(x_2,y_2)$, with sum $(x_3,y_3)=(x_1,y_1)\oplus(x_2,y_2)$, the coordinates $x_3$ and $y_3$ can be written as rational functions in the variables $x_1,y_1,x_2,y_2$. For these explicit formulae, see \cite[Group Law Algorithm~III.2.3]{silverman1986arithmetic}.
+%Write formulae?
 
 \begin{proposition}
 \label{pro:discriminant}
-%\cite[Proposition~III.1.4]{silverman2009arithmetic}
+%\cite[Proposition~III.1.4]{silverman1986arithmetic}
 The curve given by a Weierstrass equation satisfies:
 \begin{enumerate}
 \item it is non-singular if and only if $\Delta\neq0$;
@@ -219,12 +246,13 @@ The curve given by a Weierstrass equation satisfies:
 \item it has a cusp if and only if $\Delta=c_4=0$.
 \end{enumerate}
 \end{proposition}
+%Define nodes and cusps
 
 This proposition makes the discriminant is an extremely useful quantity, because it distinguishes smooth (and thus elliptic) curves from singular ones. So to know whether a Weierstrass equation defines an elliptic curve, it is enough to do a simple calculation.
 
 \subsection{Hasse invariant}
 
-In positive characteristic we have an important invariant called \emph{Hasse invariant} that relates many concepts of elliptic curves: the group law, the height of the formal group, the Frobenius morphism and the supersingularity. Silverman \cite[Theorem~V.3.1]{silverman2009arithmetic} provides a result on the $p^r$-torsion sections that can be used to define this invariant.
+In positive characteristic we have an important invariant called \emph{Hasse invariant} that relates many concepts of elliptic curves: the group law, the height of the formal group, the Frobenius morphism and the supersingularity. Silverman \cite[Theorem~V.3.1]{silverman1986arithmetic} provides a result on the $p^r$-torsion sections that can be used to define this invariant.
 
 \begin{theorem}
 \label{the:supersingular}
@@ -246,7 +274,7 @@ In the context of the previous theorem:
 
 The name ``ordinary'' refers to the elliptic curves having mostly Hasse invariant 1, while ``supersingular'' curves are in some sense atypical. Note that supersingular has nothing to do with singularities, as all elliptic curves are, by definition, non-singular.
 
-Hartshorne \cite[Section~IV.4]{hartshorne2013algebraic} provides an equivalent definition of the Hasse invariant, based on the Frobenius map. Let $k$ be a field of characteristic $p>0$. Consider the Frobenius map $F:\Spec k\rightarrow\Spec k$. Then, for a given scheme $X\xrightarrow{\pi}\Spec k$, we can define the scheme $X_p$ over $k$ as the scheme $X$ with the map $F\circ\pi:X\rightarrow\Spec k$. This makes, for $U\subseteq X$ open, the ring $H^0(U,\mathcal{O}_U)$ a $k$-algebra through the operation
+Hartshorne \cite[Section~IV.4]{hartshorne1977algebraic} provides an equivalent definition of the Hasse invariant, based on the Frobenius map. Let $k$ be a field of characteristic $p>0$. Consider the Frobenius map $F:\Spec k\rightarrow\Spec k$. Then, for a given scheme $X\xrightarrow{\pi}\Spec k$, we can define the scheme $X_p$ over $k$ as the scheme $X$ with the map $F\circ\pi:X\rightarrow\Spec k$. This makes, for $U\subseteq X$ open, the ring $H^0(U,\mathcal{O}_U)$ a $k$-algebra through the operation
 \begin{align*}
 k\times H^0(U,\mathcal{O}_U)&\longrightarrow H^0(U,\mathcal{O}_U),\\
 (r,s)&\longmapsto r^ps.
@@ -254,7 +282,7 @@ k\times H^0(U,\mathcal{O}_U)&\longrightarrow H^0(U,\mathcal{O}_U),\\
 This way, the Frobenius map $F:X_p\rightarrow X$ that raises each section to the $p$-th power is a morphism of schemes over $k$. Hence, it induces a map on cohomology $F^*:H^1(X,\mathcal{O}_X)\rightarrow H^1(X_p,\mathcal{O}_{X_p})$. This is a linear map of $k$-vector spaces. Also, if $X$ is an elliptic curve, $\dim_kH^1(X,\mathcal{O}_X)=g=1$. Furthermore, if $k$ is perfect, $\dim_kH^1(X_p,\mathcal{O}_{X_p})=\dim_kH^1(X,\mathcal{O}_X)=1$. Hence, $F^*$ is a linear map between one-dimensional vector spaces. It is thus either the zero map or bijective.
 
 \begin{proposition}
-%\cite[Section~IV.4.The~Hasse~Invariant]{hartshorne2013algebraic}
+%\cite[Section~IV.4.The Hasse Invariant]{hartshorne1977algebraic}
 Let $X$ be an elliptic curve over an algebraically closed field $k$ of characteristic $p>0$. Consider the Frobenius map on cohomology $F^*:H^1(X,\mathcal{O}_X)\rightarrow H^1(X_p,\mathcal{O}_{X_p})$. Then, the Hasse invariant is:
 \[\left\{\begin{array}{rcl}0&\text{if }F^*=0,\\1&\text{otherwise}.\end{array}\right.\]
 \end{proposition}
@@ -262,26 +290,73 @@ Let $X$ be an elliptic curve over an algebraically closed field $k$ of character
 Sometimes, it can be hard to calculate the Frobenius map on cohomology. For a way to calculate the Hasse invariant, see the following proposition.
 
 \begin{proposition}
-%\cite[Proposition~IV.4.21]{hartshorne2013algebraic}
+%\cite[Proposition~IV.4.21]{hartshorne1977algebraic}
 Let $X$ be a cubic curve in $\mathbb{P}_k^2$ given by the homogeneous polynomial $f\in k[x,y,z]$, with $k$ algebraically closed. Then, the Hasse invariant of $X$ is $0$ if and only if the coefficient of $(xyz)^{p-1}$ in $f^{p-1}$ is $0$.
 \end{proposition}
 
 \section{Elliptic surfaces}
 \begin{definition}
-An elliptic surface over a field $k$ is a surface $X\rightarrow C$ over a curve $C$ such that for all but finitely many $x\in C$, the fibre $X_x=\Spec\kappa(x)\times_CX$ is an elliptic curve.
+An elliptic surface over a field $k$ is a surface $X\rightarrow C$ over a curve $C$ together with a section $\sigma_0:C\rightarrow X$ such that:
+\begin{enumerate}
+\item for all but finitely many $x\in C$, the fibre $X_x=\Spec\kappa(x)\times_CX$ is an elliptic curve;
+\item the section $\sigma_0$ is contained in the smooth locus of $X$.
+\end{enumerate}
 \end{definition}
 
 \begin{example}
-Silverman \cite[Section~III.1]{silverman1994advanced} gives a good way to understand the geometry behind elliptic surfaces. Assume for simplicity $\chara k\neq2,3$ and consider the family of curves in $\mathbb{P}_k^2$ given by the Weierstrass equation \eqref{Equ:Weierstrass-simple}. For each value of $c_4,c_6\in\mathbb{P}_k^1$ with $c_4^3-c_6^2\neq0$, we get an elliptic curve. Now, instead of considering $c_4$ and $c_6$ as fixed parameters, make them vary along a variable $T$. Now, $c_4(T),c_6(T):\mathbb{P}_k^1\rightarrow\mathbb{P}_k^1$ are functions, so Equation \eqref{Equ:Weierstrass-simple} turns into
+Silverman \cite[Section~III.1]{silverman1994advanced} gives a good way to understand the geometry behind elliptic surfaces. Assume for simplicity $\chara k\neq2,3$ and consider the family of curves in $\mathbb{P}_k^2$ given by the Weierstrass equation \eqref{Equ:Weierstrass-simple}. For each value of $c_4,c_6\in\mathbb{P}_k^1$ with $c_4^3-c_6^2\neq0$, we get an elliptic curve. Now, instead of considering $c_4$ and $c_6$ as fixed parameters, make them vary along a variable $t$. Now, $c_4(t),c_6(t):\mathbb{P}_k^1\rightarrow\mathbb{P}_k^1$ are functions, so Equation \eqref{Equ:Weierstrass-simple} turns into
 \begin{equation}
 \label{Equ:Weierstrass-surface}
-y^2z=x^3-27c_4(T)xz^2-54c_6(T)z^3.
+y^2z=x^3-27c_4(t)xz^2-54c_6(t)z^3.
 \end{equation}
 
-Now, Equation \eqref{Equ:Weierstrass-surface} is a polynomial equation in $4$ variables, so it defines a surface $X$ in $\mathbb{P}_k^2\times_k\mathbb{P}_k^1$. For each value $t$ of $T$, we get a curve inside the surface. We can make $X$ a surface over the base line $\mathbb{P}_k^1$ by projecting over the variable $T$, i.e., the projection $X\hookrightarrow\mathbb{P}_k^2\times_k\mathbb{P}_k^1\xrightarrow{p_2}\mathbb{P}_k^1$. Then, for every $t\in\mathbb{P}_k^1$, the fibre $X_t$ is the curve in $\mathbb{P}_k^2$ given by Equation \eqref{Equ:Weierstrass-surface}, substituting the variable $T$ by the value $t$. By Proposition \ref{pro:discriminant}, it will be an elliptic curve if and only if the discriminant is non zero in $k$, i.e., if and only if $c_4(t)^3-c_6(t)^2\neq0$.
+Now, Equation \eqref{Equ:Weierstrass-surface} is a polynomial equation in $4$ variables, so it defines a surface $X$ in $\mathbb{P}_k^2\times_k\mathbb{P}_k^1$. For each value $\tau$ of $t$, we get a curve inside the surface. We can make $X$ a surface over the base line $\mathbb{P}_k^1$ by projecting over the variable $t$, i.e., the projection $X\hookrightarrow\mathbb{P}_k^2\times_k\mathbb{P}_k^1\xrightarrow{p_2}\mathbb{P}_k^1$. Then, for every $\tau\in\mathbb{P}_k^1$, the fibre $X_{\tau}$ is the curve in $\mathbb{P}_k^2$ given by Equation \eqref{Equ:Weierstrass-surface}, substituting the variable $t$ by the value $\tau$. By Proposition \ref{pro:discriminant}, it will be an elliptic curve if and only if the discriminant is non zero in $k$, i.e., if and only if $c_4(\tau)^3-c_6(\tau)^2\neq0$.
 
-Observe that we can also view Equation \eqref{Equ:Weierstrass-surface} as a polynomial equation in the field of fractions $k(T)$. Now, $c_4(T),c_6(T)$ are elements of the new base field $k(T)$. In this case, this equation defines a curve in the projective plane $\mathbb{P}_{k(T)}^2$. As long as $c_4(T)^3-c_6(T)^2\neq0$ in $k(T)$, we get an elliptic curve. This is really useful, as it reduces the study of elliptic surfaces to the study of elliptic curves. However, the new field $k(T)$ is not algebraically closed even if $k$ is. If further -- as in our case of study -- $\chara k>0$, then $k(T)$ is not even a perfect field. In the language of schemes, this elliptic curve is obtained by taking the generic fibre $X_{\eta}$ on the generic point $\eta$ of $\mathbb{P}_k^1$. This allows to extend this concept to general elliptic surfaces $X\rightarrow C$ over general curves $C$, where the generic fibre $X_{\eta}$ is an elliptic curve over the field $k(C)$ of rational functions on $C$.
+In Figure \ref{fig:elliptic-surface} you can find a representation of the elliptic surface written in inhomogeneous coordinates as $y^2=x^3+tx+1$. Its homogenization is $y^2zw=x^3w+txz^2+z^3w$, and it is a surface in $\Proj k[x,y,z]\times_k\Proj k[t,w]$. It is an elliptic surface with determinant $\Delta(t)=-16(4t^3+27)$, with elliptic fibres for all $t$ for which $t^3\neq-\frac{27}{4}$, and with a singular fibre at $t=-\frac{3\omega}{2}$ for each $\omega$ cubic root of $2$, in which case it's is a node by Proposition \ref{pro:discriminant}.
+
+Observe that we can also view Equation \eqref{Equ:Weierstrass-surface} as a polynomial equation in the field of fractions $k(t)$. Now, $c_4(t),c_6(t)$ are elements of the new base field $k(t)$. In this case, this equation defines a curve in the projective plane $\mathbb{P}_{k(t)}^2$. As long as $c_4(t)^3-c_6(t)^2\neq0$ in $k(t)$, we get an elliptic curve. This is really useful, as it reduces the study of elliptic surfaces to the study of elliptic curves. However, the new field $k(t)$ is not algebraically closed even if $k$ is. If further -- as in our case of study -- $\chara k>0$, then $k(t)$ is not even a perfect field. In the language of schemes, this elliptic curve is obtained by taking the generic fibre $X_{\eta}$ on the generic point $\eta$ of $\mathbb{P}_k^1$.
+
+This allows to extend this concept to general elliptic surfaces $X\rightarrow C$ over general curves $C$ with section $\sigma_0:C\rightarrow X$. Since $X$ is smooth for almost all points of $C$, the generic fibre $X_{\eta}$ is a smooth curve over $k(C)$. The section $\sigma_0$ gives the section $\tilde{\sigma}_0:\Spec k(C)\rightarrow X_{\eta}$ through the following fibre product diagram:
+\[
+\begin{tikzcd}
+\Spec k(C)\arrow[r]\arrow[rd,dashed,"\tilde{\sigma}_0"]\arrow[rdd,bend right,"\id"]&C\arrow[rd,bend left,"\sigma_0"]\\
+&X_{\eta}\arrow[r]\arrow[d]&X\arrow[d]\\
+&\Spec k(C)\arrow[r]&C.
+\end{tikzcd}
+\]
+This gives a geometric point $\tilde{\sigma}_0:\Spec k(C)\rightarrow X_{\eta}$, whose image will thus be a point $O\in X_{\eta}$ rational over $k(C)$. Thus, $X_{\eta}$ together with the point $O$ is an elliptic curve over the field $k(C)$. By Proposition \ref{pro:weierstrass-equation}, $X_{\eta}$ can be embedded into the projective plane $\mathbb{P}_{k(C)}^2$ whose image is given by a Weierstrass equation \eqref{Equ:weierstrass} with coefficients $a_i\in k(C)$.
+
+Thus, all elliptic surfaces -- through their generic fibre -- can be given by a Weierstrass equation with coefficients on the field of rational functions of the base curve.
 \end{example}
+
+\begin{figure}[!ht]
+\begin{center}
+\begin{subfigure}{\textwidth}
+\centering
+\includegraphics[scale=0.5]{../images/elliptic-surface.png}
+\caption{Elliptic surface $y^2=x^3+tx+1$.}
+\end{subfigure}
+\vspace{10mm}
+
+\begin{subfigure}{0.3\textwidth}
+\centering
+\IfFileExists{../images/elliptic-fibres-neg.pdf}{\includegraphics{../images/elliptic-fibres-neg.pdf}}{\input{../images/elliptic-fibres-neg.tex}}
+\caption{Fibre at $t=0$.}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\centering
+\IfFileExists{../images/elliptic-fibres-zero.pdf}{\includegraphics{../images/elliptic-fibres-zero.pdf}}{\input{../images/elliptic-fibres-zero.tex}}
+\caption{Fibre at $t=-\frac{3\sqrt[3]{2}}{2}$.}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\centering
+\IfFileExists{../images/elliptic-fibres-pos.pdf}{\includegraphics{../images/elliptic-fibres-pos.pdf}}{\input{../images/elliptic-fibres-pos.tex}}
+\caption{Fibre at $t=-3$.}
+\end{subfigure}
+\caption{Representation in the real space of the elliptic surface $y^2=x^3+tx+1$ with its fibres at $t=0$ ($\Delta=-432$), $t=-\frac{3\sqrt[3]{2}}{2}$ ($\Delta=0$), $t=-3$ ($\Delta=1296$). The fibre at $t=a$ is obtained geometrically by intersecting the surface with the horizontal plane $t=a$.}
+\label{fig:elliptic-surface}
+\end{center}
+\end{figure}
 
 \subsection{Group law}
 
@@ -307,7 +382,7 @@ C\arrow[ru,"\sigma_1"]\arrow[rd,"\sigma_2"]\arrow[rr,"{(\sigma_1,\sigma_2)}"]&&X
 \end{tikzcd}
 \]
 
-In our case, since $\mu$ is not a morphism, $\mu(\sigma_1,\sigma_2)$ is in principle not a section $C\rightarrow X$, but rather a rational map. However, since it is a rational map defined on a smooth curve, by \cite[Proposition~II.2.1]{silverman2009arithmetic}, it is a morphism, and hence, $\mu(\sigma_1,\sigma_2)\in\Hom_{\Sch_C}(C,X)$. This defines a group structure on the set of sections $\Hom_{\Sch_C}(C,X)$ of our elliptic surface $X\rightarrow C$.
+In our case, since $\mu$ is not a morphism, $\mu(\sigma_1,\sigma_2)$ is in principle not a section $C\rightarrow X$, but rather a rational map. However, since it is a rational map defined on a smooth curve, by \cite[Proposition~II.2.1]{silverman1986arithmetic}, it is a morphism, and hence, $\mu(\sigma_1,\sigma_2)\in\Hom_{\Sch_C}(C,X)$. This defines a group structure on the set of sections $\Hom_{\Sch_C}(C,X)$ of our elliptic surface $X\rightarrow C$.
 
 We also have a group law on the points of the generic fibre $X_{\eta}$ that are rational over $k(C)$, since the generic fibre is an elliptic curve over the field $k(C)$. Silverman \cite[Proposition~3.10]{silverman1994advanced} shows that these group laws are compatible.
 
@@ -326,30 +401,82 @@ As well as we can talk about supersingular elliptic curves, there is also a noti
 
 \subsection{Singular fibres}
 
-Given a general elliptic surface $X\rightarrow C$, most of the fibres are expected to be ordinary elliptic curves. Supersingular fibres are expected to be only a few of them. Even rarer is the case of singular fibres, which are the pathological cases, and there are only finitely many of them. However, most elliptic surfaces contain some singular fibres, so they must be taken into account. For a full classification of singular fibres, see \cite[Section~5.4]{schuett2019mordell}. Most of the singular fibres are expected to be of type $\I_m$. Let's explain what this means.
-%bibliographical reference for this statement?
+Given a general elliptic surface $X\rightarrow C$, most of the fibres are expected to be ordinary elliptic curves. Supersingular fibres are expected to be only a few of them. Even rarer is the case of singular fibres, which are the pathological cases, and there are only finitely many of them. However, most elliptic surfaces contain some singular fibres, so they must be taken into account.
 
-\begin{definition}
-Let $F$ be a singular fibre of an elliptic surface $X\rightarrow C$. $F$ is said to be of type $\I_1$ if it is reduced and irreducible, and it is a rational curve with a node.
+Singular fibres of elliptic surfaces were first classified by Kodaira \cite[Theorem~6.2]{kodaira1963compact} for complex surfaces. Later, N\'{e}ron \cite[Section~III.17]{neron1964modeles} classified singular fibres in general characteristic. He showed that also for general fields, the singular fibres are those previously described by Kodaira (although N\'{e}ron gave them different names). Because of the importance of Kodaira's classification, his nomenclature is normally used in the literature.
 
-$F$ is said to be of type $\I_2$ if it decomposes into irreducible components as $F=\Theta_0+\Theta_1$, with $\Theta_0,\Theta_1$ different components that intersect transversally at two points so that their intersection number $(\Theta_0\cdot\Theta_1)=2$. (For more details about intersection numbers, see \cite[Lecture~12]{mumford1966lectures}.)
+A summarised classification of singular fibres is given by Sch\"{u}tt and Shioda \cite[Section~5.4]{schuett2019mordell} and is shown below.
 
-$F$ is said to be of type $\I_m$ with $m\geq3$ if its decomposition into irreducible components is $F=\Theta_0+\cdots+\Theta_{m-1}$ with $\Theta_i$ all distinct that intersect cyclically, i.e., such that $(\Theta_i\cdot\Theta_{i+1})=1$ for all $i=0,\ldots,m-2$ and $(\Theta_{m-1}\cdot\Theta_0)$.
+\begin{theorem}
+Let $X\rightarrow C$ be an elliptic surface with zero section $\sigma_0:C\rightarrow X$. Let $x\in C$ be a point where the fibre $X_x$ is singular. Let
+\[X_x=\sum_{i=0}^{m-1}\mu_i\Theta_i\]
+be its decomposition as a divisor into irreducible components, where for $0\leq i\leq m-1$, $\Theta_i$ is the $i$-th irreducible component, and has multiplicity $\mu_i$. The quantity $m$ is the number of different irreducible components.
+Then, there exists a unique component that intersects the zero section $\sigma_0$. W.l.o.g. we say it is $\Theta_0$, and we call it the identity component. Its multiplicity is $\mu_0=1$.
 
-If $m>1$, then every irreducible component $\Theta_i$ is a smooth rational curve with self intersection number $(\Theta_i)^2=-2$.
+The singular fibre $X_x$ either
+\begin{enumerate}[label=(\roman*)]
+\item is an irreducible singular fibre, i.e., $m=1$, $X_x=\Theta_0$ (types $\I_1$ and $\II$ detailed below); or
+\item is a reducible singular fibre, i.e., $m>1$. In this case, all components $\Theta_i$ are smooth rational curves with self-intersection number $(\Theta_i)^2=-2$. (For more details about intersection numbers, see \cite[Lecture~12]{mumford1966lectures}.)
+\end{enumerate}
 
-A picture illustrating the type $\I_m$ singular fibres can be found in Figure \ref{fig:singular-fibres}.
-\end{definition}
+The singular fibre $X_x$ is of one of the following types:
 
-\begin{figure}
+\begin{itemize}
+\item[$\I_m$:]
+\begin{itemize}
+\item[$\I_1$:] $X_x=\Theta_0$ ($m=1$) is an irreducible rational curve with a node.
+\item[$\I_2$:] $X_x=\Theta_0+\Theta_1$ ($m=2$) and the two components intersect transversally at two different points so that $(\Theta_0\cdot\Theta_1)=2$.
+\item[$\I_m$:] $X_x=\Theta_0+\cdots+\Theta_{m-1}$ ($m\geq3$) where $(\Theta_i\cdot\Theta_{i+1})=1$ for all $i=0,\ldots,m-2$, and $(\Theta_{m-1}\cdot\Theta_0)=1$.
+\end{itemize}
+
+\item[$\II$:] $X_x=\Theta_0$ ($m=1$) is an irreducible rational curve with a cusp.
+
+\item[$\III$:] $X_x=\Theta_0+\Theta_1$ ($m=2$) and both components intersect at one single point with $(\Theta_0\cdot\Theta_1)=2$.
+
+\item[$\IV$:] $X_x=\Theta_0+\Theta_1+\Theta_2$ ($m=3$) and the three components meet at one single point with $(\Theta_0\cdot\Theta_1)=(\Theta_1\cdot\Theta_2)=(\Theta_2\cdot\Theta_0)=1$.
+
+\item[$\I_b^*$:] $X_x=\Theta_0+\Theta_1+\Theta_2+\Theta_3+2\Theta_4+\cdots+2\Theta_{b+4}$ ($m=b+5$), $b\geq0$ with intersection numbers $(\Theta_0\cdot\Theta_4)=(\Theta_1\cdot\Theta_4)=(\Theta_2\cdot\Theta_{b+4})=(\Theta_3\cdot\Theta_{b+4})=1$, and $(\Theta_4\cdot\Theta_5)=\cdots=(\Theta_{b+3}\cdot\Theta_{b+4})=1$.
+
+\item[$\II^*$:] $X_x=\Theta_0+2\Theta_7+3\Theta_6+4\Theta_5+5\Theta_4+6\Theta_3+4\Theta_2+2\Theta_1+3\Theta_8$ ($m=9$) with intersection numbers $(\Theta_0\cdot\Theta_7)=(\Theta_7\cdot\Theta_6)=(\Theta_6\cdot\Theta_5)=(\Theta_5\cdot\Theta_4)=(\Theta_4\cdot\Theta_3)=(\Theta_3\cdot\Theta_2)=(\Theta_2\cdot\Theta_1)=(\Theta_3\cdot\Theta_8)=1$.
+
+\item[$\III^*$:] $X_x=\Theta_0+2\Theta_1+3\Theta_2+4\Theta_3+3\Theta_4+2\Theta_5+\Theta_6+2\Theta_7$ ($m=8$) with intersection numbers $(\Theta_0\cdot\Theta_1)=(\Theta_1\cdot\Theta_2)=(\Theta_2\cdot\Theta_3)=(\Theta_3\cdot\Theta_4)=(\Theta_4\cdot\Theta_5)=(\Theta_5\cdot\Theta_6)=(\Theta_3\cdot\Theta_7)=1$.
+
+\item[$\IV^*$:] $X_x=\Theta_0+\Theta_1+2\Theta_2+3\Theta_3+2\Theta_4+\Theta_5+2\Theta_6$ ($m=7$) with intersection numbers $(\Theta_1\cdot\Theta_2)=(\Theta_2\cdot\Theta_3)=(\Theta_3\cdot\Theta_4)=(\Theta_4\cdot\Theta_5)=(\Theta_3\cdot\Theta_6)=(\Theta_6\cdot\Theta_0)=1$.
+\end{itemize}
+
+All pairs of irreducible components $\Theta_i\neq\Theta_j$ without an explicitly given intersection number are disjoint, i.e., $(\Theta_i\cdot\Theta_j)=0$.
+\end{theorem}
+
+\begin{figure}[!ht]
 \begin{center}
-\input{../images/singular-fibres.tex}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/singular-fibres-1.pdf}{\includegraphics{../images/singular-fibres-1.pdf}}{\input{../images/singular-fibres-1.tex}}
+\caption{Singular fibre of type $\I_1$.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/singular-fibres-2.pdf}{\includegraphics{../images/singular-fibres-2.pdf}}{\input{../images/singular-fibres-2.tex}}
+\caption{Singular fibre of type $\I_2$.}
+\end{subfigure}
+\vspace{20mm}
+
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/singular-fibres-3.pdf}{\includegraphics{../images/singular-fibres-3.pdf}}{\input{../images/singular-fibres-3.tex}}
+\caption{Singular fibre of type $\I_3$.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\IfFileExists{../images/singular-fibres-4.pdf}{\includegraphics{../images/singular-fibres-4.pdf}}{\input{../images/singular-fibres-4.tex}}
+\caption{Singular fibre of type $\I_4$.}
+\end{subfigure}
 \caption{Illustration of the singular fibres of type $\I_m$ in an elliptic surface. Modified from: \cite[Figure~5.1]{schuett2019mordell}.}
 \label{fig:singular-fibres}
 \end{center}
 \end{figure} 
 
-Singular fibres are more difficult to study than non-singular fibres, as the latter are elliptic curves. For that reason, we would like to regularise singular fibres $X_s$ from an elliptic surface $X\rightarrow S$, if possible. One way is reduction. This process consists of doing a finite base change $S'\rightarrow S$ and take the new surface $X'=X\times_SS'\rightarrow S'$, and then potentially normalise. After this process, one may assume that all fibres are semi-stable, this is, smooth or singular of type $\I_m$.
+Singular fibres are more difficult to study than non-singular fibres, as the latter are elliptic curves. For that reason, we would like to regularise singular fibres $X_s$ from an elliptic surface $X\rightarrow S$, if possible. One way is reduction. This process consists of doing a finite base change $S'\rightarrow S$ and take the new surface $X'=X\times_SS'\rightarrow S'$, and then potentially normalise. After this process, one may assume that all fibres are semi-stable, this is, smooth or singular of type $\I_m$, which is the ``least pathological'' case of singular fibres. A picture illustrating this type of singular fibres can be found in Figure \ref{fig:singular-fibres}.
 %Try to find a source for this
 
 \chapter{Formal groups}
@@ -390,6 +517,7 @@ Given an $n$-dimensional formal group law $F$, there exists a unique power serie
 We have two problems when we try to associate $F$ with the operation $k^n\times k^n\rightarrow k^n$:
 \begin{enumerate}
 \item $F$ carries more information than the operation on $k^n$. There may exist two formal group laws $F,G$ that are different as formal power series -- and thus are different -- but lead to the same operation $k^n\times k^n\rightarrow k^n$.
+%Look for any concrete example
 
 \item When $F$ has infinitely many terms, it cannot define an operation on $k^n$, as we would need a way to sum infinite terms. This can be solved either choosing a topology on the ring (like the $I$-adic topology) or taking only the nilpotent elements, as we can always apply a power series to them, because only finitely many terms are non-zero.
 \end{enumerate}
@@ -475,17 +603,18 @@ Let $k$ be an algebraically closed field of $\chara k=p>0$.
 \section{Formal group schemes}
 
 Formal group schemes -- also simply known as formal groups -- are the analogue of group schemes, but in the category of formal schemes. Thus, before talking about formal groups, let's define what formal schemes are.
-%talk about infinitesimal idea behind completion and formal schemes
+%Talk about the infinitesimal idea behind completion and formal schemes
 
 \subsection{Formal schemes}
-%look for better sources for this part
 
 The construction of formal schemes from topological rings is analogous to the construction of schemes from rings. First you define affine schemes, then you define general schemes as ringed spaces that are locally affine.
 
-Let's start with topological rings. First, recall some definitions on $I$-adic rings given by Liedtke \cite[Section~12]{liedtke2022algebra}.
+Let's start with topological rings. First, recall some definitions on $I$-adic rings given by Atiyah and MacDonald \cite[Chapter~10]{atiyah1969introduction}.
 
 \begin{definition}
 Given a ring $R$ and an ideal $I$, we can define the $I$-\textbf{adic topology} to be the topology in which every element $x\in R$ has $\{x+I^n\}_{n\in\mathbb{N}}$ as base of neighbourhoods.
+
+We say that $R$ is an $I$-\textbf{adic ring} if it has the $I$-adic topology and it is separated (Hausdorff) and complete.
 \end{definition}
 
 For our geometric constructions, we will be interested in the completion of rings with respect to the $I$-adic topology. The completion thought of as the set of equivalent classes of Cauchy sequences might appear to be a highly abstract object, but here is a proposition that allows it to be calculated very easily.
@@ -495,9 +624,11 @@ Given a ring $R$ with the $I$-adic topology, its completion can be written as an
 \[\widehat{R}=\varprojlim R/I^n.\]
 \end{proposition}
 
-The wiki nLab \cite{nlab2024formal} explains the theory of formal schemes that I present below.
+Grothendieck and Dieudonn\'{e} \cite[Section~I.10]{grothendieck1960elements} explain the theory of formal schemes that I present below.
 
 \begin{definition}
+%\cite[D\'{e}finition~I.10.1.2]{grothendieck1960elements}
+%admissible anneaux = adic ring
 Let $R$ be a noetherian $I$-adic ring. We define its \textbf{formal spectrum} as:
 \[\Spf R=\Spec R/I.\]
 
@@ -512,6 +643,7 @@ The open prime ideals in $R$ are those that contain $I$. Hence, $\Spf R$ can be 
 The structure sheaf $\mathcal{O}_{\Spf R}$ of the formal spectrum is just the completion of the structure sheaf $\mathcal{O}_{\Spec R}$ of the spectrum. Hence, we have the following remark.
 
 \begin{remark}
+%\cite[Proposition~I.10.1.4]{grothendieck1960elements}
 Given $f\in R$,
 \[\mathcal{O}_{\Spf R}(D(f))=\widehat{R_f}.\]
 \end{remark}
@@ -519,22 +651,27 @@ Given $f\in R$,
 Notice that, even though $R$ is $I$-adically complete, we need to take the completion of the structure sheaf, because the localisations need not be complete.
 
 \begin{definition}
+%\cite[D\'{e}finition~I.10.4.2]{grothendieck1960elements}
 Let $(X,\mathcal{O}_X)$ be a \textbf{topologically ringed space}, i.e., a sheaf of topological rings on the topological space $X$. We say that $(X,\mathcal{O}_X)$ is a \textbf{locally noetherian formal scheme} when every point $x\in X$ has an open neighbourhood $U\subseteq X$ isomorphic -- as topologically ringed spaces -- to the formal spectrum $(\Spf R,\mathcal{O}_{\Spf R})$ of some noetherian adic ring $R$.
+
+We say that a locally noetherian formal scheme $(X,\mathcal{O}_X)$ is called \textbf{noetherian} if $X$ is quasi-compact. 
 \end{definition}
 
 Now we have the notion of a formal scheme. The following natural step is to define the morphisms between formal schemes. This is done the expected way.
 
 \begin{definition}
+%\cite[D\'{e}finition~I.10.4.5]{grothendieck1960elements}
 Let $X,Y$ be formal schemes. A \textbf{morphism of formal schemes} $f:X\rightarrow Y$ is a morphism of the underlying ringed spaces with the extra condition of
 \[f^{\sharp}(U):\mathcal{O}_Y(U)\longrightarrow\mathcal{O}_X(f^{-1}(U))\]
 being continuous for every open set $U\subseteq Y$.
 \end{definition}
-%Extend definition of morphism of locally noetherian formal schemes to general formal schemes
+%Extend definition of morphism of locally noetherian formal schemes to general formal schemes?
 
-We have constructed formal schemes by means of completions of rings with respect to ideals. This can also be seen as the completion of an affine scheme (the spectrum of the ring) with respect to a closed subscheme (defined by the ideal). Hence, we can generalise the construction of formal schemes to completions of a generic scheme along a closed subscheme.
+We have constructed formal schemes by means of completions of rings with respect to ideals. This can also be seen as the completion of an affine scheme (the spectrum of the ring) with respect to a closed subscheme (defined by the ideal). Grothendieck \cite[Section~2]{grothendieck1960geometrie} generalises the construction of formal schemes to completions of a generic scheme along a closed subscheme.
 
 \begin{definition}
-Let $X$ be a scheme and $Y$ a closed subscheme of $X$ with sheaf of ideals $\mathcal{I}$. Then we define the \textbf{completion of $\boldsymbol{X}$ along $\boldsymbol{Y}$} as the scheme $\widehat{X}=(Y,\mathcal{O}_{\widehat{X}})$ whose underlying topological space is $Y$ and whose sheaf of rings is the completion defined as
+%\cite[D\'{e}finition~I.10.8.4]{grothendieck1960elements}
+Let $X$ be a noetherian scheme and $Y$ a closed subscheme of $X$ with sheaf of ideals $\mathcal{I}$. Then we define the \textbf{completion of $\boldsymbol{X}$ along $\boldsymbol{Y}$} as the scheme $\widehat{X}=(Y,\mathcal{O}_{\widehat{X}})$ whose underlying topological space is $Y$ and whose sheaf of rings is the completion defined as
 \[\mathcal{O}_{\widehat{X}}=\varprojlim\mathcal{O}_X/\mathcal{I}^n.\]
 \end{definition}
 
@@ -568,7 +705,7 @@ Completion along the origin justifies the definitions of the formal additive and
 \begin{example}
 Another example of this construction is the formal group of an elliptic curve. Recall the group scheme structure of an elliptic curve $X$ over a field $k$ as defined in Section \ref{Sse:elliptic-curves-group-law}. We can take the formal completion of $X$ along its neutral element $O$ to obtain its formal group $\widehat{X}$. Assume $\chara k>0$. From Theorem \ref{the:supersingular}, we know that the height $h$ of this formal group can tell us if $X$ is an ordinary ($h=1$) or a supersingular ($h=2$) elliptic curve.
 
-Silverman \cite[Section~IV.1]{silverman2009arithmetic} provides an interesting description of the formal group of an elliptic curve in terms of the explicit power series. Let's present these calculations.
+Silverman \cite[Section~IV.1]{silverman1986arithmetic} provides an interesting description of the formal group of an elliptic curve in terms of the explicit power series. Let's present these calculations.
 
 First take Weierstrass equation \eqref{eq:weierstrass-no-homo}:
 \[y^2+a_1xy+a_3y=x^3+a_2x^2+a_4x+a_6,\]
@@ -599,7 +736,7 @@ Since $w=f(t,w)$, this expression must satisfy $w(t)=f(t,w(t))$.
 
 To define rigorously this process, we define by recurrence the polynomials
 \[f_1(t,w)=f(t,w),\quad f_{m+1}(t,w)=f_m(t,f(t,w));\]
-this is, each step we substitute the $w$ in $f_m$ by its equivalent expression $f(t,w)$. Silverman \cite[Proposition~IV.1.1]{silverman2009arithmetic} shows that this process converges.
+this is, each step we substitute the $w$ in $f_m$ by its equivalent expression $f(t,w)$. Silverman \cite[Proposition~IV.1.1]{silverman1986arithmetic} shows that this process converges.
 
 \begin{proposition}
 \begin{enumerate}[label=(\arabic*)]
@@ -609,7 +746,7 @@ this is, each step we substitute the $w$ in $f_m$ by its equivalent expression $
 \end{enumerate}
 \end{proposition}
 
-This proposition is a consequence of Hensel's Lemma \cite[Lemma~IV.1.2]{silverman2009arithmetic}.
+This proposition is a consequence of Hensel's Lemma \cite[Lemma~IV.1.2]{silverman1986arithmetic}.
 
 Now we can recover the original coordinates $x,y$ and express them as a Laurent series in $t$ with coefficients in $\mathbb{Z}[a_1,\ldots,a_6]$.
 \[\frac{1}{w(t)}=\frac{1}{t^3}\,\frac{1}{1+A_1t+A_2t^2+\cdots}=\frac{1}{t^3}\big(1-(A_1t+A_2t^2+\cdots)+(A_1t+A_2t^2+\cdots)^2-\cdots\big),\]
@@ -644,13 +781,15 @@ Cohomology on schemes arises from the fact that, given a scheme $X$, the functor
 \[\Gamma(X,-):\mathfrak{Mod}_{\mathcal{O}_X}\longrightarrow\Mod_{\Gamma(X,\mathcal{O}_X)}\]
 is left exact, but it not right exact. So for each $\mathcal{O}_X$-module $\mathcal{F}$, we can define its cohomology $H^{\bullet}(X,\mathcal{F})$.
 
-However, this cohomology is done on the Zariski topology, which is too coarse. To solve this, Grothendieck proposed a finer topology that allowed to develop a useful cohomology theory. This is the \'{e}tale topology -- although it is not a topology strictly speaking, but a more general notion called \emph{site}.
+For example, for complex varieties $X$, cohomology on the Euclidean topology is very used. One can, for instance, define the Betti numbers $b_r(X)$ as the dimensions of the cohomology groups $H^r(X(\mathbb{C}),\mathbb{Q})$, regarded as vector spaces over $\mathbb{C}$. However, for a general variety over a generic field, we only have the Zariski topology, which is too coarse. For example, if $X$ is irreducible, then the groups $H^r(X,\mathbb{Z})$ are zero for all $r>0$ for the Zariski topology. To solve this, Grothendieck proposed a finer topology that allowed to develop a useful cohomology theory. This is the \'{e}tale topology -- although it is not a topology strictly speaking, but a more general notion called \emph{site}.
+
+With this new tool, we can do cohomology of finite groups $\Lambda$ over general fields. For the particular case of complex varieties, the \'{e}tale cohomology groups $H^r(X_{\text{\'{e}t}},\Lambda)$ coincide with the cohomology groups $H^r(X(\mathbb{C}),\Lambda)$ for the usual Euclidean topology
 
 In this chapter we will expose the theory of \'{e}tale topology, mainly based on Milne's lectures \cite{milne2013lectures}. This will be later used in Chapter \ref{Cha:formal-brauer-group} to define the formal Brauer group.
 
 \section{Sites}
 
-If we define a sheaf of abelian groups, and then we want to define a sheaf of rings, formally we should give again the definition for these presheaves, although the procedure is completely analogous. Therefore, one may want to define sheaves of objects of a general category. (For a detailed explanation about category theory, see \cite{mac2013categories}.)
+If we define a sheaf of abelian groups, and then we want to define a sheaf of rings, formally we should give again the definition for these presheaves, although the procedure is completely analogous. Therefore, one may want to define sheaves of objects of a general category. (For a detailed explanation about category theory, see \cite{maclane1971categories}.)
 
 Usually, a presheaf $\mathcal{F}$ is defined as a family of abelian groups $\mathcal{F}(U)$ (or sets, rings\ldots) indexed on the open sets $U$ of a topological space $X$, together with restriction maps $\rho_{UV}:\mathcal{F}(U)\rightarrow\mathcal{F}(V)$ whenever $V\subseteq U\subseteq X$, and such that $\rho_{UW}=\rho_{VW}\circ\rho_{UV}$ whenever $W\subseteq V\subseteq U$.
 
@@ -671,7 +810,7 @@ The inclusion $V\hookrightarrow U$ is mapped by the functor $\mathcal{F}$ into t
 The notion of sheaf can be translated into the language of categories too. A presheaf $\mathcal{F}$ is called a sheaf when it satisfies the axioms of separatedness and glueing, this is, when for all open set $U\subseteq X$ and open cover $\{U_i\}_{i\in I}$ of $U$, if we have $\{s_i\in\mathcal{F}(U_i)\}_{i\in I}$ such that $\forall i,j\in I$ $\rho_{U_i,U_i\cap U_j}(s_i)=\rho_{U_j,U_i\cap U_j}(s_j)$, then there exists a unique $s\in\mathcal{F}(U)$ such that $\forall i\in I$ $\rho_{UU_i}(s)=s_i$.
 
 This definition works well when we have a concrete category. But in a more general category, we need a more general definition. Assume that the category $C$ has all limits. Let $U\subseteq X$ be open with open cover $\{U_i\}_{i\in I}$. Consider the following maps:
-%only small limits needed?
+%Only small limits are needed?
 \[(\rho_{UU_i})_{i\in I}:\mathcal{F}(U)\longrightarrow\prod_{i\in I}\mathcal{F}(U_i),\]
 this is, the morphism whose $i$-th component is $\rho_{UU_i}$.
 Let
@@ -818,6 +957,7 @@ This definition may appear to be merely algebraic, so here is a result on variet
 \begin{proposition}
 %\cite[Proposition~I.2.9]{milne2013lectures}
 Let $f:X\rightarrow Y$ be a smooth morphism of smooth varieties over an algebraically closed field $k$. Then $f$ is \'{e}tale if and only if $\forall x\in X$ the map on tangent spaces
+%In the book it says "nonsingular" instead of "smooth". Be careful
 \[df_x:(\mathfrak{m}_x/\mathfrak{m}_x^2)^{\vee}\longrightarrow\big(\mathfrak{m}_{f(x)}/\mathfrak{m}_{f(x)}^2\big)^{\vee}\]
 is an isomorphism.
 \end{proposition}
@@ -883,7 +1023,9 @@ This family automatically constitutes a covering of $U$ in $X_{\text{\'{e}t}}$, 
 
 \subsection{Sheaves on the \'{e}tale topology}
 
-So far, we have defined what sheaves on the \'{e}tale topology are. They are not just objects that exist, but Milne \cite[Section~I.6]{milne2013lectures} also constructs explicit examples of such sheaves. Let's do the most typical one.
+So far, we have defined what sheaves on the \'{e}tale topology are. They are not just objects that exist, but Milne \cite[Section~I.6]{milne2013lectures} also constructs explicit examples of such sheaves. Let's do the most typical ones.
+
+\subsubsection*{Coherent $\boldsymbol{\mathcal{O}_X}$-module}
 
 Let $\mathcal{F}$ be a coherent sheaf of modules on a scheme $X$. Let $\varphi:U\rightarrow X$ be an \'{e}tale morphism. Then, the inverse image $\varphi^*\mathcal{F}$ is a coherent sheaf on $U$. Take
 \[\mathcal{F}^{\text{\'{e}t}}(U)\coloneqq H^0(U,\varphi^*\mathcal{F}|_U).\]
@@ -891,6 +1033,8 @@ It can be checked that this leads to a sheaf $\mathcal{F}^{\text{\'{e}t}}$ on $X
 \[\rho^*:\mathcal{F}^{\text{\'{e}t}}(V)\longrightarrow\mathcal{F}^{\text{\'{e}t}}(U).\]
 
 In particular, we can take the structure sheaf $\mathcal{F}=\mathcal{O}_X$ of the scheme $X$. Following the previous construction, we can obtain the structure sheaf $\mathcal{O}_{X_{\text{\'{e}t}}}$ on the site $X_{\text{\'{e}t}}$.
+
+\subsubsection*{Stalks}
 
 \begin{definition}
 %\cite[Section~I.4.Schemes]{milne2013lectures}
@@ -917,7 +1061,22 @@ where the direct limit is taken over all \'{e}tale neighbourhoods $(U,\bar{u})$ 
 \item In the case of the structure sheaf $\mathcal{O}_{X_{\text{\'{e}t}}}$, the stalk at $\bar{x}:\Spec k\rightarrow X$ takes the form
 \[\mathcal{O}_{X,\bar{x}}=\varinjlim_{(U,\bar{u})}H^0(U,\mathcal{O}_U),\]
 where the direct limit is taken over all connected affine \'{e}tale neighbourhoods $(U,\bar{u})$ of $\bar{x}$. The ring $\mathcal{O}_{X,\bar{x}}$ is often referred to as the \textbf{strictly local ring} at $\bar{x}$.
-%\input{discarded/etale-stalk.tex}
+
+Every open subset $U\subseteq X$ that contains $x$ is an \'{e}tale neighbourhood of $\bar{x}$ via the inclusion $U\hookrightarrow X$ and the geometric point $\bar{u}$ that factorises $\bar{x}$:
+\[
+\begin{tikzcd}[column sep=small]
+\Spec k\arrow[rr,"\bar{x}"]\arrow[rd,swap,"\bar{u}"]&&X.\\
+&U\arrow[ru,hook]
+\end{tikzcd}
+\]
+Hence, there are morphisms $H^0(U,\mathcal{O}_U)\rightarrow\mathcal{O}_{X,\bar{x}}$ (compatible with restrictions) for all open sets $U\subseteq X$. By the universal property of the direct limit, there exists a unique ring homomorphism $\mathcal{O}_{X,x}\rightarrow\mathcal{O}_{X,\bar{x}}$ such that the following diagram commutes:
+\[
+\begin{tikzcd}[column sep=small,row sep=small]
+&\mathcal{O}_{X,\bar{x}}\\\\
+&\mathcal{O}_{X,x}\arrow[uu,dashed]\\
+H^0(U,\mathcal{O}_U)\arrow[rr]\arrow[ru]\arrow[ruuu,bend left]&&H^0(V,\mathcal{O}_V).\arrow[lu]\arrow[luuu,bend right]
+\end{tikzcd}
+\]
 
 %\cite[Example~I.6.13]{milne2013lectures}
 \item More generally, the stalk of a coherent $\mathcal{O}_X$-module $\mathcal{F}$ at $\bar{x}$ is
@@ -925,7 +1084,45 @@ where the direct limit is taken over all connected affine \'{e}tale neighbourhoo
 where $\mathcal{F}_x$ is the usual stalk of $\mathcal{F}$ as a sheaf on $X_{\text{zar}}$, and $x\in X$ is the image of the point in $\Spec k$ by the map $\bar{x}$.
 \end{enumerate}
 \end{example}
-%\input{discarded/skyscraper.tex}
+
+\subsubsection*{Skyscraper sheaf}
+
+Now, we would like to define the skyscraper sheaf on the \'{e}tale topology. Recall that in the case of a topological space $X$, a skyscraper sheaf $\mathcal{F}$ is such that for some $x\in X$, $\mathcal{F}_x=\Lambda$ for some abelian group $\Lambda$, while for all $y\neq x$, $\mathcal{F}_x=0$. This can be constructed as the sheafification of the presheaf
+\[\mathcal{F}(U)=\left\{\begin{array}{rcl}\Lambda&\text{if}&x\in U,\\0&\text{if}&x\notin U;\end{array}\right.\]
+which results in the direct sum of $\Lambda$ indexed on all the connected components of $U$.
+
+\begin{definition}
+%\cite[Section~I.6.Skyscraper sheaves]{milne2013lectures}
+Let $X$ be a variety over an algebraically closed field $k$, $x\in X$, and let $\Lambda$ be an abelian group. We define the \textbf{skyscraper sheaf} $\Lambda^x$ on $X_{\text{\'{e}t}}$ as follows: for any \'{e}tale map $\varphi:U\rightarrow X$, write
+\[\Lambda^x(U)\coloneqq\bigoplus_{u\in\varphi^{-1}(x)}\Lambda.\]
+\end{definition}
+
+It can be checked that $\Lambda^x$ is indeed a sheaf on $X_{\text{\'{e}t}}$, and it is such that for $y\notin\varphi(U)$, $\Lambda^x(U)=0$.
+
+\begin{remark}
+Taking the stalk at $x$ is the left adjoint functor of taking the skyscraper sheaf of the abelian group. This means, there exists a natural bijection
+\[\Hom(\mathcal{F},\Lambda^x)\simeq\Hom(\mathcal{F},\Lambda).\]
+This tells us that to give a morphism of sheaves $\mathcal{F}\rightarrow\Lambda^x$, it is sufficient to give a morphism of abelian groups $\mathcal{F}\rightarrow\Lambda$.
+\end{remark}
+
+\subsubsection*{Constant sheaf}
+
+Another very useful construction using abelian groups is the constant sheaf.
+%\cite[Section~I.6.Examples of sheaves on $X_{\text{et}}$]{milne2013lectures}
+
+\begin{definition}
+Let $X$ be a quasi-compact scheme and let $\Lambda$ be an abelian group. For $U\rightarrow X$ \'{e}tale, define
+\[\mathcal{F}_{\Lambda}(U)=\Lambda^{\pi_0(U)},\]
+this is, a family of copies of $\Lambda$ indexed $\pi_0(U)$, the set of connected components of $U$. $\mathcal{F}_{\Lambda}$ defines a sheaf of abelian groups on $X_{\text{\'{e}t}}$, called the \textbf{constant sheaf} defined by $\Lambda$. Many times, the sheaf $\mathcal{F}_{\Lambda}$ is simply denoted as $\Lambda$.
+\end{definition}
+
+\begin{remark}
+If $\Lambda$ is a finite group, then its constant sheaf is defined by $X\times\Lambda$ -- disjoint union of copies of $X$ indexed on $\Lambda$.
+\end{remark}
+
+These sheaves are used very often in \'{e}tale cohomology. As said at the beginning of this chapter, \'{e}tale topology was firstly developed with the goal of doing cohomology of groups on varieties. That's why constructing sheaves out of abelian groups is so relevant. In the following section, we will see an example of these cohomology groups.
+
+%\input{discarded/inverse-image.tex}
 
 \subsection{\'{E}tale cohomology}
 
@@ -966,6 +1163,7 @@ to which apply the functor $\Gamma(U,-)$ to obtain the complex
 \[\mathcal{F}(U)\longrightarrow\mathcal{I}_0(U)\overset{d_0}{\longrightarrow}\mathcal{I}_1(U)\overset{d_1}{\longrightarrow}\mathcal{I}_2(U)\longrightarrow\cdots\]
 which is not exact and has cohomology groups
 \[H^i(U,\mathcal{F})=\frac{\ker d_i}{\im d_{i-1}}.\]
+%Are these sections in U or in X?
 
 \begin{remark}
 The cohomology groups do not depend on the injective resolution. Hence, we can apply the general theory of derived functors. It states that for all $r\geq0$, we have a well defined functor:
@@ -991,6 +1189,38 @@ we have a long exact sequence
 \end{enumerate}
 \end{remark}
 
+\subsubsection*{$\boldsymbol{\ell}$-adic cohomology}
+
+Liedtke \cite[Section~1.3]{liedtke2016lectures} provides an example of usage of \'{e}tale cohomology: the Betti numbers, which are cohomological invariants of varieties that arise from the $\ell$-adic cohomology.
+
+\begin{definition}
+Let $X$ be a smooth variety over a field of characteristic $p\geq0$. Let $\ell$ be a prime number. We define the $n$-th $\ell$-\textbf{adic cohomology} group of $X$ to be
+\[H_{\text{\'{e}t}}^n(X,\mathbb{Z}_{\ell})\coloneqq\varprojlim H_{\text{\'{e}t}}^n(X,\mathbb{Z}/\ell^m\mathbb{Z}),\]
+where $\mathbb{Z}/\ell^m\mathbb{Z}$ is regarded as the constant sheaf on $X_{\text{\'{e}t}}$.
+
+Define as well
+\[H_{\text{\'{e}t}}^n(X,\mathbb{Q}_{\ell})\coloneqq H_{\text{\'{e}t}}^n(X,\mathbb{Z}_{\ell})\otimes_{\mathbb{Z}_{\ell}}\mathbb{Q}_{\ell}.\]
+\end{definition}
+
+Observe that we didn't define the cohomology groups to be directly $H_{\text{\'{e}t}}^n(X,\mathbb{Q}_{\ell})$. That's because it's preferred to do \'{e}tale cohomology on finite abelian groups. Hence, we perform cohomology on $\mathbb{Z}/\ell^m\mathbb{Z}$, and after that, extend it to the ring $\mathbb{Z}_{\ell}$ of $\ell$-adic integers, and then to the field $\mathbb{Q}_{\ell}$ of $\ell$-adic numbers.
+
+Something about cohomology groups we are often interested in is their dimension. Let's present a result proven by Katz and Messing \cite[Corollary~1]{katz1974consequences} on the dimension of the $\ell$-adic cohomology groups.
+
+\begin{proposition}
+Let $X$ be a smooth proper variety over an algebraically closed field $k$ of positive characteristic $p>0$. Let $\ell\neq p$ be a prime number. Then, the dimension of $H_{\text{\'{e}t}}^n(X,\mathbb{Q}_{\ell})$ over $\mathbb{Q}_{\ell}$ does not depend on $\ell$.
+\end{proposition}
+
+This result let's us define a very useful invariant of these varieties.
+
+\begin{definition}
+\label{def:betti-numbers}
+Let $X$ be a smooth proper variety over an algebraically closed field $k$ of positive characteristic $p>0$. We define the $n$-th \textbf{Betti number} of $X$ as
+\[b_n(X)=\dim_{\mathbb{Q}_{\ell}}H_{\text{\'{e}t}}^n(X,\mathbb{Q}_{\ell}),\]
+for some prime $\ell\neq p$.
+\end{definition}
+
+In Chapter \ref{Cha:formal-brauer-group}, we will show the close relation of the Betti numbers with the formal Brauer group, and they will help to calculate some of its properties, such as its height.
+
 \chapter{Formal Brauer group}
 \label{Cha:formal-brauer-group}
 
@@ -1009,7 +1239,7 @@ where $\Art_k$ is the category of local Artinian $k$-algebras with residue field
 \end{definition}
 
 This functor is especially interesting when it is prorepresentable by a formal group, as it can be given a geometric structure. The prorepresentability is discussed in \cite{artin1977formal}, and it is known in some special cases.
-%talk about definition of prorepresentability
+%Present the definition of prorepresentability
 
 \begin{example}
 The case $n=1$ is very well known, and is explained by Liedtke \cite[Example~6.14]{liedtke2016lectures}. The elements in the cohomology group $H_{\text{\'{e}t}}^1(X\times_kR,\mathcal{O}_{X\times_kR}^{\times})$ can be identified with the invertible sheaves over $X\times_kR$. Hence, $\Phi_X^1(R)$ is identified with the group of invertible sheaves on $X\times_kR$ that are trivial when restricted to $X$. Thus, there is a bijection
@@ -1052,6 +1282,7 @@ An important remark about K3 surfaces is the following.
 \begin{remark}
 In a K3 surface, the geometric and the arithmetic genus coincide. Therefore, we will simply refer to its genus $g$.
 \end{remark}
+%The genus of all K3 surfaces is 1
 
 \begin{proof}
 On the one hand, the geometric genus is, by definition:
@@ -1061,6 +1292,27 @@ On the other hand, the arithmetic genus is defined in terms of the Euler charact
 By definition of K3 surface, the ``irregularity'' $h^1(X,\mathcal{O}_X)=0$ vanishes. Furthermore, by Serre duality, $h^2(X,\mathcal{O}_X)=h^0(X,\omega_X)$. Thus,
 \[p_a(X)=h^2(X,\mathcal{O}_X)-h^1(X,\mathcal{O}_X)=h^0(X,\omega_X)-0=p_g(X)=g(X).\]
 \end{proof}
+
+Also, K3 surfaces have specific cohomological invariants, which allow to do further computations. Let's first present its Betti numbers \cite[Proposition~2.3]{liedtke2016lectures}.
+
+\begin{proposition}
+\label{pro:k3-betti}
+Let $X$ be a K3 surface. Then, $X$ has the following Betti numbers:
+\begin{align*}
+b_0(X)&=1,\\
+b_1(X)&=0,\\
+b_2(X)&=22,\\
+b_3(X)&=0,\\
+b_4(X)&=1.
+\end{align*}
+\end{proposition}
+
+One can also compute the Hodge numbers $h^{pq}(X)\coloneqq\dim_kH^q(X,\bigwedge^p\Omega_X)$ \cite[Proposition~2.4]{liedtke2016lectures}. They are usually given in the form of a Hodge diamond.
+
+\begin{proposition}
+A K3 surface has the following Hodge diamond:
+\[\begin{tikzcd}[column sep=-3pt,row sep=3pt]&&h^{00}\\&h^{10}&&h^{01}\\h^{20}&&h^{11}&&h^{02}\\&h^{21}&&h^{12}\\&&h^{22}\end{tikzcd}\qquad=\qquad\begin{tikzcd}[column sep=1pt,row sep=3pt]&&1\\&0&&0\\1&&20&&1\\&0&&0\\&&1\end{tikzcd}\]
+\end{proposition}
 
 Let's give a method \cite[Example~2.2]{liedtke2016lectures} to construct explicit examples of K3 surfaces using coordinates inside the projective space.
 
@@ -1075,9 +1327,9 @@ Two things are to be shown:
 \[\omega_X\cong\omega_{\mathbb{P}_k^3}\otimes\mathcal{I}^{\vee}\otimes\mathcal{O}_X.\]
 Now, since $X$ has degree $4$, $\mathcal{I}=\mathcal{O}_{\mathbb{P}_k^3}(-4)$. Furthermore, $\omega_{\mathbb{P}_k^3}=\mathcal{O}(-4)$. Thus,
 \[\omega_X\cong\mathcal{O}(-4)\otimes\mathcal{O}(4)\otimes\mathcal{O}_X=\mathcal{O}_X.\]
-%check over which sheaf the tensor product is done
+%Check on which sheaf of rings the tensor product is performed
 
-\item $H^1(X,\mathcal{O}_X)=0$. Recall that from Hartshorne \cite[Theorem~III.5.1]{hartshorne2013algebraic} that $H^i(\mathbb{P}_k^d,\mathcal{O}_{\mathbb{P}_k^d}(n))=0$ for all $n\in\mathbb{Z}$ and all $i\notin\{0,d\}$. If $i:X\hookrightarrow\mathbb{P}_k^3$ is the inclusion, the closed subscheme exact sequence writes:
+\item $H^1(X,\mathcal{O}_X)=0$. Recall that from Hartshorne \cite[Theorem~III.5.1]{hartshorne1977algebraic} that $H^i(\mathbb{P}_k^d,\mathcal{O}_{\mathbb{P}_k^d}(n))=0$ for all $n\in\mathbb{Z}$ and all $i\notin\{0,d\}$. If $i:X\hookrightarrow\mathbb{P}_k^3$ is the inclusion, the closed subscheme exact sequence writes:
 \[0\longrightarrow\mathcal{I}\longrightarrow\mathcal{O}_{\mathbb{P}_k^3}\longrightarrow i^*\mathcal{O}_X\longrightarrow0.\]
 Taking cohomology, we get
 \[H^1(\mathbb{P}_k^3,\mathcal{O}_{\mathbb{P}_k^3})\longrightarrow H^1(\mathbb{P}_k^3,i^*\mathcal{O}_X)\longrightarrow H^2(\mathbb{P}_k^3,\mathcal{I}).\]
@@ -1087,25 +1339,164 @@ Finally, by the compatibility of cohomology with inverse images,
 \[H^1(X,\mathcal{O}_X)=H^1(\mathbb{P}_k^3,i^*\mathcal{O}_X)=0.\]
 \end{enumerate}
 \end{proof}
-%Give Fermat's quartic as an example
+%Give Fermat's quartic as an example of non-vacuous study
 
 So now we can restrict ourselves to the study of the properties of the formal Brauer group for the special case of a degree $4$ surface in the projective space, as they will automatically be K3, so they will have an associated formal Brauer group. We will assume further that the surface $X$ is given a map $X\rightarrow C$ onto a curve $C$ that makes it an elliptic surface.
+
+Let's first recall the N\'{e}ron--Severi group of a scheme. For that, let's take the definition for algebraic equivalence of divisors that Hartshorne \cite[Exercise~V.7]{hartshorne1977algebraic} provides.
+
+\begin{definition}
+\label{def:neron-severi-group}
+Let $X$ be a surface (i.e., a nonsingular projective variety of dimension $2$ over an algebraically closed field $k$). Let $T$ be a nonsingular curve over $k$. $X\times T$ is a family of fibres $X_t$ isomorphic to $X$ indexed by $T$. Let $D$ be an effective Cartier divisor on $X\times T$ that is flat as a closed scheme of $X\times T$. Then, for each closed point $t\in T$ in the curve, the intersection $D_t=D.X_t$ between $D$ and the fibre $X_t$ defines a Cartier divisor $D_t$ on $X_t\cong X$. Then, we say that $\{D_t\,|\,t\in T\}$ is an \textbf{algebraic family of divisors} on $X$ parametrised by $T$.
+
+For all closed points $t_0,t_1\in T$, we say that the divisors $D_{t_0},D_{t_1}$ are prealgebraically equivalent. Two general divisors $D,D'\in\Div(X)$ are said to be prealgebraically equivalent if they are differences of prealgebraically equivalent effective divisors. Finally, we say that two divisors $D,D'\in\Div(X)$ are \textbf{algebraically equivalent} if there exists a finite sequence $D=D_0,D_1,\ldots,D_{n-1},D_n=D'$ such that $D_i$ and $D_{i+1}$ are prealgebraically equivalent for $i=0,\ldots,n-1$.
+
+The group of divisors of a surface $X$ modulo algebraic equivalence is called the \textbf{N\'{e}ron--Severi group}, and is denoted $\NS(X)$.
+\end{definition}
+
+\begin{remark}
+\begin{enumerate}
+\item The divisors algebraically equivalent to $0$ form a subgroup of $\Div(X)$. This fact tells us that the N\'{e}ron--Severi group is indeed a group.
+
+\item Linearly equivalent divisors are also algebraically equivalent. This makes the principal divisors a subgroup of the divisors algebraically equivalent to $0$.
+\end{enumerate}
+\end{remark}
+
+Lang and N\'{e}ron \cite{lang1959rational} proved the following theorem using the theorem of the base.
+
+\begin{theorem}[Lang--Neron]
+The N\'{e}ron--Severi group $\NS(X)$ of a surface $X$ is finitely generated.
+\end{theorem}
+
+Recall (for example, from \cite[Chapter~I]{lang1965algebra}, Sections \emph{Direct sums and free abelian groups} and \emph{Finitely generated abelian groups}) that a finitely generated abelian group $G$ has an associated rank $n$, which is the nonnegative integer such that $G/G_{\text{tor}}\cong\mathbb{Z}^n$, where $G_{\text{tor}}=\{x\in G\,|\,\exists n>0:nx=0\}$ is the torsion group of $G$. This leads to the following definition \cite{moonen1993picard}.
+%\cite[I,~Theorem~4]{lang1965algebra} and \cite[I,~Theorem~8]{lang1965algebra} in first edition
+%\cite[I,~Theorem~7.3]{lang1965algebra} and \cite[I,~Theorem~8.5]{lang1965algebra} in third edition
+
+\begin{definition}
+The previous theorem allows us to define the \textbf{rank of the N\'{e}ron--Severi group} of a surface, which is often denoted as $\rho$. This quantity is also called the \textbf{Picard number} of the surface.
+\end{definition}
+
+But in the case of elliptic surfaces, Sch\"{u}tt and Shioda \cite[Theorem~6.2]{schuett2009elliptic} state that we don't need to care about the torsion of the N\'{e}ron--Severi group because of the following theorem.
+
+\begin{theorem}
+If $X$ is an elliptic surface with a singular fibre, then $\NS(X)$ is torsion-free.
+\end{theorem}
+
+This theorem is proven by showing that in the case of elliptic surfaces, algebraic equivalence coincides with numerical equivalence, and the group $\Num X$ of divisors modulo numerical equivalence is always free for all surfaces.
 
 A useful concept that will help us classify surfaces is that of supersingularity. There are two main approaches for this: the definition of Shioda and the definition of Artin. We will use the definition of Artin \cite[Definition~0.3]{artin1974supersingular}.
 
 \begin{definition}
-A K3 surface is called \textbf{supersingular} if the height of its formal Brauer group is infinite.
+A K3 surface is called \textbf{supersingular} if the height of its formal Brauer group is infinite. This is, if $\widehat{\Br}_X$ is the additive formal group.
+
+A K3 surface is called \textbf{ordinary} if the height of its formal Brauer group is $1$.
+
+When we say the \textbf{height} of a K3 surface, we'll refer to the height of its formal Brauer group.
 \end{definition}
 
 There is also a definition of Shioda, that says that a surface is supersingular if the rank of the N\'{e}ron--Severi group equals the second Betti number. However, in the case of elliptic K3 surfaces, both definitions are equivalent, as Artin showed \cite[Theorem~0.1]{artin1974supersingular}, \cite[Theorem~1.7]{artin1974supersingular}.
 
-\section{Formal Brauer group and elliptic surfaces}
+\section{Formal Brauer group and elliptic K3 surfaces}
+
+There have been some attempts to make estimations on the height of the formal Brauer group of elliptic K3 surfaces. 
+
+First, let's present the following relation between the rank of the N\'{e}ron--Severi group $\rho$ and the second Betti number $b_2$ (Definition \ref{def:betti-numbers}) of surfaces. It was proven by Igusa \cite{igusa1960betti}.
+
+\begin{theorem}[Igusa]
+Let $X$ be a non-singular irreducible surface. Then, the second Betti number is at least equal to the Picard number $\rho$, i.e.,
+\begin{equation}
+\label{eq:igusa-inequality}
+\rho\leq b_2.
+\end{equation}
+\end{theorem}
+
+Recall from Proposition \ref{pro:k3-betti} that for a K3 surface the second Betti number is $b_2=22$. Hence, K3 surfaces can only have $\rho=1,\ldots,22$. There exist K3 surfaces with maximal rank of the N\'{e}ron--Severi group $\rho=22$. Shioda and Katsura \cite[Theorem~4.3]{shioda1979fermat} prove that the Fermat surface $x^4+y^4+z^4+t^4=0$ in characteristic $p\equiv3$ (mod $4$) is an example of case in which $\rho=22$. More generally, they prove that the surface $x^m+y^m+z^m+t^m=0$ is supersingular if and only if there exists an integer $\nu$ such that $p^{\nu}\equiv-1$ (mod $m$).
+
+This extreme case of $\rho=b_2$ motivates Shioda's definition of supersingularity.
+%\cite[Theorem~4.1]{sasakura1968results}
+%@article{sasakura1968results,
+%  title={On some results on the Picard numbers of certain algebraic surfaces},
+%  author={Sasakura, Nobuo},
+%  journal={Journal of the Mathematical Society of Japan},
+%  volume={20},
+%  number={1--2},
+%  pages={297--321},
+%  year={1968},
+%  publisher={The Mathematical Society of Japan},
+%  doi={10.2969/jmsj/02010297}
+%}
+
+\begin{definition}
+A surface is called \textbf{supersingular in the sense of Shioda} if $\rho=b_2$.
+\end{definition}
+
+However, Artin \cite[Definition~0.3]{artin1974supersingular} gives another definition of supersingularity for surfaces.
+
+\begin{definition}
+A K3 surface $X$ on characteristic $p>0$ is called \textbf{supersingular (in the sense of Artin)} if the height of its formal Brauer group is infinite. This is, if $\widehat{\Br}_X$ is the additive formal group.
+\end{definition}
+
+These two definitions that are a priori different will be shown to be equal for elliptic K3 surfaces.
+
+Artin and Mazur \cite[Theorem~0.1]{artin1974supersingular} improved Igusa's inequality for projectively liftable surfaces by adding the ingredient of the height of the formal Brauer group into the inequation. This way, they obtained a very important estimate of the height.
+
+\begin{theorem}
+\label{the:igusa-artin-mazur}
+Let $X$ be a surface that lifts projectively to characteristic $0$. Assume that the height $h$ of its formal Brauer group is finite. Then,
+\[\rho\leq b_2-2h.\]
+This is frequently called the \textbf{Igusa--Artin--Mazur inequality}.
+\end{theorem}
+
+\begin{corollary}
+Let $X$ be a surface that lifts projectively to characteristic $0$. If $\rho=b_2$, then $h=\infty$. This is, if it is supersingular in the sense of Shioda, then so it is in the sense of Artin.
+\end{corollary}
+
+Artin and Mazur also conjecture (loc. cit.) the converse: if $h=\infty$, then the equality $\rho=b_2$ holds. They prove this statement for elliptic K3 surfaces \cite[Theorem~1.7]{artin1974supersingular}
+
+\begin{theorem}[Artin]
+Let $X$ be an elliptic K3 surface. If $X$ has height $h=\infty$, then $\rho=22$. In this case, the Brauer group $\Br_X=H_{\text{\'{e}t}}^2(X,\mathcal{O}_X^{\times})$ is a $p$-torsion group.
+\end{theorem}
+
+The condition in Theorem \ref{the:igusa-artin-mazur} of the surface lifting projectively to characteristic $0$ is general enough for our purpose, becuase Artin and Swinnerton-Dyer \cite[Proposition~2.5]{artin1973shafarevich} showed that all elliptic surfaces lift to characteristic zero.
+
+\begin{proposition}
+Let $X\rightarrow\mathbb{P}_k^1$ be an elliptic surface admitting only rational nodes and cusps as singular fibres. Then, $X$ lifts projectively to characteristic $0$.
+\end{proposition}
+
+Thus, in the case of elliptic K3 surfaces, both definitions of supersingularity (Shioda's and Artin's) are equivalent.
+
+\begin{proposition}
+\label{pro:range-height}
+Let $X\rightarrow\mathbb{P}_k^1$ be an elliptic K3 surface on a field $k$ of positive characteristic.
+\begin{enumerate}
+\item\label{pro:range-height:bound} The height $h$ of the formal Brauer group $\widehat{\Br}_X$ is either $1\leq h\leq10$ or $h=\infty$.
+\item\label{pro:range-height:existence} For all values of $h\in\{1,\ldots,10,\infty\}$, there exists an elliptic K3 surface with formal Brauer group of height $h$.
+\end{enumerate}
+\end{proposition}
+%Say we were "only" interested in one-dimensional formal groups because the formal Brauer group of an elliptic K3 surface is always one-dimensional
+
+Part \ref{pro:range-height:bound} of Proposition \ref{pro:range-height} follows directly from the Igusa--Artin--Mazur inequality. Regarding Part \ref{pro:range-height:existence}, examples of K3 surfaces of each admitted height can be found in \cite[Corollary~7.7]{artin1974supersingular} and \cite[Remark~2.9]{milne1976duality}.
+\vspace{2mm}
+
+All elliptic K3 surfaces $X$ have a minimal Weierstrass model $X'$ that can be written as a Weierstrass equation
+\begin{equation}
+\label{eq:weierstrass-minimal}
+y^2-a_1(t)xy-a_3(t)y=x^3+a_2(t)x^2+a_4(t)x+a_6(t),
+\end{equation}
+where $a_i\in k[t]$ have $\deg a_i\leq2i$, i.e.,
+\[a_i(t)=\sum_{j=0}^{2i}a_{ij}t^j.\]
+%State a sufficient condition for this minimal model to be K3 (\exists i: \deg(a_i)>i)
+
+For the study of the formal Brauer group of elliptic K3 surfaces, we can restrict ourselves to study the minimal Weierstrass model thanks to the following Lemma provided by Artin \cite[Lemma~1.8]{artin1974supersingular}.
+
+\begin{lemma}[Artin]
+Let $X$ be an elliptic K3 surface with minimal Weierstrass model $X'$. Then, $\rho(X)=\rho(X')$ and $\widehat{\Br}(X)\cong\widehat{\Br}(X')$.
+\end{lemma}
 
 Artin \cite[Theorem~2.12]{artin1974supersingular} showed that there exists a relation between the coefficients of the Weiestrass equation that defines an elliptic surface and the height of its formal Brauer group.
 
 \begin{theorem}[Artin]
-Let $k$ be a field of characteristic $p=2$. Let $X$ be an elliptic surface over $k$ given by a Weierstrass equation \eqref{Equ:weierstrass}, where the coefficients $a_i=a_i(t)=\sum_{j=0}^{2i}a_{ij}t^j\in k[t]$ are polynomials in $t$ of degree at most $2i$. This equation can be chosen to have $a_2(t)=0$ and $a_{12}=1$. Then,
-%Can all elliptic surfaces be expressed in such a Weierstrass equation?
+Let $k$ be a field of characteristic $p=2$. Let $X$ be an elliptic surface over $k$ with minimal Weierstrass model $X'$ given by a Weierstrass equation \eqref{eq:weierstrass-minimal}. This equation can be chosen to have $a_2(t)=0$ and $a_{12}=1$. Then,
 \begin{itemize}
 \item $h=1$ if $a_{11}\neq0$,
 \item $h\geq2$ if $a_{11}=0$,
@@ -1120,7 +1511,29 @@ Furthermore, in the same article \cite[Proposition~2.13]{artin1974supersingular}
 Let $k$ be a field of characteristic $p=2$. Let $X$ be an elliptic surface over $k$ given by a Weierstrass equation. Assume all odd coefficients $a_{ij}$ ($j$ odd) to be zero. Then $X$ is supersingular.
 \end{proposition}
 
-Also Ito and Liedtke \cite[Theorem~3.5]{ito2010elliptic} discovered some relations between the properties of elliptic surfaces and their Brauer group. Concretely, the following theorem shows the interplay between the height of the formal Brauer group and the ``bad'' fibres of the elliptic surface.
+Artin (loc. cit.) explains the procedure he follows to calculate the height of the formal Brauer group in terms of the coefficients in Equation \eqref{eq:weierstrass-minimal}. Propp \cite[Theorem~7.1]{propp2018constructing} summarises this procedure into an algorithm easy to implement.
+
+\begin{theorem}[Propp]
+Teorema gonito :)
+\end{theorem}
+
+Propp \cite[Section~6]{propp2018constructing} presents another way of computing the height of the formal Brauer group. In this case, he a method provided by Stienstra's \cite[Theorem~1]{stienstra1987formal} to calculate the logarithm of a formal group law.
+
+\begin{theorem}[Stienstra]
+Theorem of Sinisterra.
+\end{theorem}
+
+Also Ito and Liedtke \cite[Theorem~3.5]{ito2011elliptic} discovered some relations between the properties of elliptic surfaces and their Brauer group. Concretely, the following theorem shows the interplay between the height of the formal Brauer group and the ``bad'' fibres of the elliptic surface.
+%Things missing:
+% - every elliptic surface can be written with a Weierstrass equation (through the generic fibre): Proposition 2.5
+% - every elliptic K3 surface is over the projective line
+% - short weierstrass form with discriminant
+% - Mordell-Weil group
+% - Stienstra's algorithm
+% - aknowledgements
+% - delete DOI
+% - check which Springer branch
+% - explain the restriction of the definition of the Artin--Mazur formal group
 
 \begin{theorem}[Ito--Liedtke]
 Let $X\rightarrow\mathbb{P}_k^1$ be an elliptic K3 surface in characteristic $p>0$ whose fibration does not have constant $j$-invariant. Assume that it has a $p$-torsion section. Then, the fibration has either exactly one or exactly two fibres with potentially supersingular reduction. Furthermore,
@@ -1130,6 +1543,6 @@ Let $X\rightarrow\mathbb{P}_k^1$ be an elliptic K3 surface in characteristic $p>
 \end{enumerate}
 \end{theorem}
 
-\bibliographystyle{alpha}
-\bibliography{bibliography.bib}
+\nocite{*}
+\printbibliography[heading=bibintoc]
 \end{document}

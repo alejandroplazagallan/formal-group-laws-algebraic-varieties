@@ -1,0 +1,21 @@
+
+An important tool that Milne \cite[Section~I.8]{milne2013lectures} defines is the inverse image of a sheaf.
+
+\begin{definition}
+%\cite[Section~I.8.Inverse images of sheaves]{milne2013lectures}
+Let $f:X\rightarrow Y$ be a morphism of schemes. Let $\mathcal{F}$ be a sheaf on $Y_{\text{\'{e}t}}$. We define the presheaf $\mathcal{F}'$ on $X_{\text{\'{e}t}}$ as:
+\[\mathcal{F}'(V)=\varinjlim\mathcal{F}(U),\]
+for $V\rightarrow X$ \'{e}tale, and the direct limit is taken over \'{e}tale morphisms $U\rightarrow Y$ such that the following diagram commutes:
+\[
+\begin{tikzcd}
+V\arrow[r]\arrow[d]&U\arrow[d]\\
+X\arrow[r]&Y.
+\end{tikzcd}
+\]
+We define the \textbf{inverse image} $f^*\mathcal{F}$ to be the sheafification of $\mathcal{F}'$.
+\end{definition}
+
+\begin{proposition}
+%\cite[Remark~I.8.9]{milne2013lectures}
+Given a morphism of schemes $f:X\rightarrow Y$, the inverse image $f^*\Sh(Y_{\text{\'{e}t}})\rightarrow\Sh(X_{\text{\'{e}t}})$ is an exact functor.
+\end{proposition}

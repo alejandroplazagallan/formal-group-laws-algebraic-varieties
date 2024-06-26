@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[left=2cm,top=2.5cm,right=1.5cm,bottom=2.5cm]{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usetikzlibrary{external}
+\usepgfplotslibrary{external}
+\tikzexternalize
+\DeclareMathOperator{\I}{I}
+
+\begin{document}
+\begin{figure}[!ht]
+\begin{center}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{group-law-secant}
+\input{group-law-secant.tex}
+\caption{Sum of two distinct points.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{group-law-tangent}
+\input{group-law-tangent.tex}
+\caption{Sum of a point with itself.}
+\end{subfigure}
+\caption{Illustration of the group law of elliptic curves. Modified from: [Sil09, Figure~3.3].}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\begin{subfigure}{\textwidth}
+\centering
+\includegraphics[scale=0.5]{elliptic-surface.png}
+\caption{Elliptic surface $y^2=x^3+tx+1$.}
+\end{subfigure}
+\vspace{10mm}
+
+\begin{subfigure}{0.3\textwidth}
+\centering
+\tikzsetnextfilename{elliptic-fibres-neg}
+\input{elliptic-fibres-neg.tex}
+\caption{Fibre at $t=0$.}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\centering
+\tikzsetnextfilename{elliptic-fibres-zero}
+\input{elliptic-fibres-zero.tex}
+\caption{Fibre at $t=-\frac{3\sqrt[3]{2}}{2}$.}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\centering
+\tikzsetnextfilename{elliptic-fibres-pos}
+\input{elliptic-fibres-pos.tex}
+\caption{Fibre at $t=-3$.}
+\end{subfigure}
+\caption{Representation in the real space of the elliptic surface $y^2=x^3+tx+1$ with its fibres at $t=0$ ($\Delta=-432$), $t=-\frac{3\sqrt[3]{2}}{2}$ ($\Delta=0$), $t=-3$ ($\Delta=1296$). The fibre at $t=a$ is obtained geometrically by intersecting the surface with the horizontal plane $t=a$.}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{singular-fibres-1}
+\input{singular-fibres-1.tex}
+\caption{Singular fibre of type $\I_1$.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{singular-fibres-2}
+\input{singular-fibres-2.tex}
+\caption{Singular fibre of type $\I_2$.}
+\end{subfigure}
+\vspace{20mm}
+
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{singular-fibres-3}
+\input{singular-fibres-3.tex}
+\caption{Singular fibre of type $\I_3$.}
+\end{subfigure}
+\begin{subfigure}{0.45\textwidth}
+\centering
+\tikzsetnextfilename{singular-fibres-4}
+\input{singular-fibres-4.tex}
+\caption{Singular fibre of type $\I_4$.}
+\end{subfigure}
+\caption{Illustration of the singular fibres of type $\I_m$ in an elliptic surface. Modified from: [SS19, Figure~5.1].}
+\end{center}
+\end{figure}
+\end{document}

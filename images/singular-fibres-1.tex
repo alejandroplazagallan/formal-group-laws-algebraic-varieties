@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\newcommand{\ymax}{1.5}
+\newcommand{\xhead}{1.5}
+\newcommand{\exc}{0.5}
+
+\newcommand{\xmax}{(sqrt(((\ymax+\exc)/\xhead)^2*(27*((\ymax+\exc)/\xhead)^2-4))/(2*3^(3/2))+((\ymax+\exc)/\xhead)^2/2+(-1)/27)^(1/3)+1/(9*(sqrt(((\ymax+\exc)/\xhead)^2*(27*((\ymax+\exc)/\xhead)^2-4))/(2*3^(3/2))+((\ymax+\exc)/\xhead)^2/2+(-1)/27)^(1/3))+(-1)/3}
+\draw [smooth,samples=75,domain=-1:0] plot(\xhead*\x,{\xhead*sqrt((\x)^(2)+(\x)^(3))});
+\draw [smooth,domain=0:{\xmax}] plot(\xhead*\x,{\xhead*sqrt((\x)^(2)+(\x)^(3))});
+\draw [smooth,samples=75,domain=-1:0] plot(\xhead*\x,{-\xhead*sqrt((\x)^(2)+(\x)^(3))});
+\draw [smooth,domain=0:{\xmax}] plot(\xhead*\x,{-\xhead*sqrt((\x)^(2)+(\x)^(3))});
+\end{tikzpicture}

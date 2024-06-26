@@ -1,0 +1,27 @@
+\begin{tikzpicture}[scale=0.75]
+\newcommand{\avar}{-3}
+\newcommand{\bvar}{1}
+\newcommand{\ymax}{3.5}
+%\newcommand{\exc}{0.000007630}
+\newcommand{\exc}{0}
+\newcommand{\glui}{0.009}
+\newcommand{\gluii}{0.055}
+\newcommand{\gluiii}{0.01}
+\newcommand{\lw}{1.5}
+
+\newcommand{\xmax}{2.68221750204240}
+\newcommand{\xmin}{-1.87938524157182}
+\newcommand{\xii}{0.347296355333861}
+\newcommand{\xiii}{1.53208888623796}
+\begin{axis}
+[grid=both,x=1cm,y=1cm,ymin=-3.5,ymax=3.5,xmax=3.5,xmin=-2,xtick={-1,...,3},ytick={-3,...,3},axis lines=middle,xlabel=$x$,ylabel=$y$,clip=false]
+\draw [line width=\lw pt,smooth,samples=75,domain=\xmin:\xii,color=violet] plot(\x,{sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [line width=\lw pt,smooth,samples=50,domain=\xiii+\exc:\xmax,color=violet] plot(\x,{sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [line width=\lw pt,smooth,samples=75,domain=\xmin:\xii,color=violet] plot(\x,{-sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [line width=\lw pt,smooth,samples=50,domain=\xiii+\exc:\xmax,color=violet] plot(\x,{-sqrt((\x)^3+\avar*\x+\bvar)});
+\draw [above left,color=violet] ({\xmax},\ymax) node {$y^2=x^3-3x+1$};
+\draw [line width=\lw pt,color=violet] ({\xmin},-\glui) -- ({\xmin},\glui);
+\draw [line width=\lw pt,color=violet] ({\xii},-\gluii) -- ({\xii},\gluii);
+\draw [line width=\lw pt,color=violet] ({\xiii},-\gluiii) -- ({\xiii},\gluiii);
+\end{axis}
+\end{tikzpicture}

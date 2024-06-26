@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\newcommand{\ymax}{1.5}
+\newcommand{\width}{0.4}
+\newcommand{\exc}{0.5}
+
+\draw ({(\ymax)^2/(2*\width)-\width/2-sqrt(((\ymax)^2/(2*\width)+\width/2)^2-(\ymax+\exc)^2)},\ymax+\exc) arc ({180-asin((\ymax+\exc)/((\ymax)^2/(2*\width)+\width/2))}:{180+asin((\ymax+\exc)/((\ymax)^2/(2*\width)+\width/2))}:{(\ymax)^2/(2*\width)+\width/2});
+\draw ({-((\ymax)^2/(2*\width)-\width/2-sqrt(((\ymax)^2/(2*\width)+\width/2)^2-(\ymax+\exc)^2))},\ymax+\exc) arc ({asin((\ymax+\exc)/((\ymax)^2/(2*\width)+\width/2))}:{-asin((\ymax+\exc)/((\ymax)^2/(2*\width)+\width/2))}:{(\ymax)^2/(2*\width)+\width/2});
+\end{tikzpicture}
